@@ -26,4 +26,6 @@ RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framewor
 
 RUN chmod -R 775 storage bootstrap/cache
 
+RUN php artisan migrate --force
+
 EXPOSE 80
