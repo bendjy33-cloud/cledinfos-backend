@@ -26,4 +26,4 @@ RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framewor
 
 RUN chmod -R 775 storage bootstrap/cache
 
-EXPOSE 8080
+EXPOSE 80

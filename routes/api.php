@@ -14,6 +14,14 @@ use App\Http\Controllers\Api\AuthorController;
 use App\Http\Controllers\Api\AdController;
 use App\Http\Controllers\Api\BreakingNewsController;
 
+
+Route::get('/test-api', function () {
+    return response()->json([
+        'status' => 'OK'
+    ]);
+});
+
+
 Route::get('/categories/{slug}/posts', [PostController::class, 'byCategory']);
 
 Route::get('/posts', [PostController::class, 'index']);
