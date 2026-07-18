@@ -4,13 +4,11 @@ WORKDIR /var/www/html
 
 COPY . .
 
-# Image config
 ENV WEBROOT=/var/www/html/public
 ENV SKIP_COMPOSER=0
 ENV PHP_ERRORS_STDERR=1
 ENV RUN_SCRIPTS=1
 
-# Laravel
 ENV APP_ENV=production
 ENV APP_DEBUG=false
 ENV LOG_CHANNEL=stderr
@@ -24,6 +22,10 @@ RUN chmod -R 775 storage bootstrap/cache
 RUN php artisan config:clear || true
 RUN php artisan route:clear || true
 RUN php artisan view:clear || true
-RUN php artisan migrate --force || true
+
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
+CMD ["/start.sh"]
 
 EXPOSE 80
