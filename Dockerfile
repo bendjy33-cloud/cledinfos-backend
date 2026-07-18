@@ -17,14 +17,13 @@ ENV LOG_CHANNEL=stderr
 
 RUN composer install --no-dev --optimize-autoloader
 
-RUN php artisan config:clear || true
-RUN php artisan route:clear || true
-RUN php artisan view:clear || true
-
 RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views bootstrap/cache
 
 RUN chmod -R 775 storage bootstrap/cache
 
+RUN php artisan config:clear || true
+RUN php artisan route:clear || true
+RUN php artisan view:clear || true
 RUN php artisan migrate --force || true
 
 EXPOSE 80
