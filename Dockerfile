@@ -15,17 +15,15 @@ ENV LOG_CHANNEL=stderr
 
 RUN composer install --no-dev --optimize-autoloader
 
-RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views bootstrap/cache
+RUN mkdir -p storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/views \
+    bootstrap/cache
 
 RUN chmod -R 775 storage bootstrap/cache
 
 RUN php artisan config:clear || true
 RUN php artisan route:clear || true
 RUN php artisan view:clear || true
-
-COPY start.sh /start.sh
-RUN chmod +x /start.sh
-
-CMD ["/start.sh"]
 
 EXPOSE 80
