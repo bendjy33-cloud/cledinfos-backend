@@ -15,6 +15,9 @@ ENV LOG_CHANNEL=stderr
 
 RUN composer install --no-dev --optimize-autoloader
 
+RUN php artisan migrate --force || true
+RUN php artisan db:seed --force || true
+
 RUN mkdir -p storage/framework/cache \
     storage/framework/sessions \
     storage/framework/views \
