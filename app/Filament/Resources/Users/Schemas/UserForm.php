@@ -11,24 +11,24 @@ class UserForm
     {
         return $schema
             ->components([
+
                 TextInput::make('name')
-                    ->label('Name')
                     ->required()
                     ->maxLength(255),
 
                 TextInput::make('email')
-                    ->label('Email')
                     ->email()
                     ->required()
+                    ->unique(ignoreRecord: true)
                     ->maxLength(255),
 
                 TextInput::make('password')
-                    ->label('Password')
                     ->password()
                     ->revealable()
-                    ->dehydrated(fn ($state) => filled($state))
-                    ->required(fn (string $operation) => $operation === 'create')
-                    ->minLength(8),
+                    ->minLength(8)
+                    ->required(fn ($operation) => $operation === 'create')
+                    ->dehydrated(fn ($state) => filled($state)),
+
             ]);
     }
 }
