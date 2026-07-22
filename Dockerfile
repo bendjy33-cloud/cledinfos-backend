@@ -4,19 +4,25 @@ WORKDIR /var/www/html
 
 COPY . .
 
-ENV WEBROOT=/var/www/html/public
+# Image config
 ENV SKIP_COMPOSER=0
+ENV WEBROOT=/var/www/html/public
 ENV PHP_ERRORS_STDERR=1
 ENV RUN_SCRIPTS=1
+ENV REAL_IP_HEADER=1
 
+# Laravel config
 ENV APP_ENV=production
 ENV APP_DEBUG=false
 ENV LOG_CHANNEL=stderr
 
-RUN composer install --no-dev --optimize-autoloader
+# Allow composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
-RUN php artisan migrate --force || true
-RUN php artisan db:seed --force || true
+RUN composer install \
+    --no-dev \
+    --optimize-autoloader \
+    --no-interaction
 
 RUN mkdir -p storage/framework/cache \
     storage/framework/sessions \
@@ -25,10 +31,4 @@ RUN mkdir -p storage/framework/cache \
 
 RUN chmod -R 775 storage bootstrap/cache
 
-RUN php artisan storage:link || true
-
-RUN php artisan config:clear || true
-RUN php artisan route:clear || true
-RUN php artisan view:clear || true
-
-EXPOSE 80
+CMD ["/start.sh"]
