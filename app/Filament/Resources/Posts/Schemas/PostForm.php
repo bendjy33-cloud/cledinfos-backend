@@ -11,6 +11,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
+use App\Services\CloudinaryService;
 
 class PostForm
 {
@@ -62,16 +63,19 @@ class PostForm
                     ->preload()
                     ->searchable(),
 
-
                 FileUpload::make('image')
                     ->label('Image principale')
                     ->image()
-                    ->disk('public')
-                    ->directory('posts')
-                    ->visibility('public')
                     ->imageEditor()
-                    ->required(),
+                    ->saveUploadedFileUsing(function ($file) {
 
+                        return app(CloudinaryService::class)->upload(
+                            $file->getRealPath(),
+                            'cledinfos/posts'
+                        );
+
+                    })
+                    ->required(),
 
 
                 RichEditor::make('content')
