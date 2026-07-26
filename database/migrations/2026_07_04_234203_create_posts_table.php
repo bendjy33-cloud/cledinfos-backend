@@ -20,6 +20,7 @@ return new class extends Migration
         $table->longText('content');
 
         $table->string('image')->nullable();
+        $table->string('image_url')->nullable();
 
         $table->foreignId('category_id')->constrained()->onDelete('cascade');
 

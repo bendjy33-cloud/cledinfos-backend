@@ -6,23 +6,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-use App\Models\Post;
-
-Route::get('/test-post', function () {
-
-    return Post::create([
-        'title' => 'Test',
-        'slug' => 'test-' . time(),
-        'content' => 'Test',
-        'image' => 'https://example.com/test.jpg',
-        'category_id' => 1,
-        'author_id' => 1,
-        'keywords' => 'test',
-        'featured' => false,
-        'views' => 0,
-        'is_published' => true,
-        'published_at' => now(),
-    ]);
-
+Route::get('/test-cloudinary', function () {
+    return [
+        'cloud_name' => config('cloudinary.cloud.cloud_name'),
+        'api_key' => config('cloudinary.cloud.api_key'),
+        'api_secret' => config('cloudinary.cloud.api_secret') ? 'OK' : 'MISSING',
+    ];
 });
