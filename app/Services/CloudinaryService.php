@@ -11,9 +11,9 @@ class CloudinaryService
     {
         Configuration::instance([
             'cloud' => [
-                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                'api_key' => env('CLOUDINARY_KEY'),
-                'api_secret' => env('CLOUDINARY_SECRET'),
+                'cloud_name' => config('filesystems.disks.cloudinary.cloud'),
+                'api_key' => config('filesystems.disks.cloudinary.key'),
+                'api_secret' => config('filesystems.disks.cloudinary.secret'),
             ],
             'url' => [
                 'secure' => true,
