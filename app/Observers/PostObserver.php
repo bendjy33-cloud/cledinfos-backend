@@ -10,8 +10,14 @@ class PostObserver
 {
     public function created(Post $post): void
     {
+        Log::info('OBSERVER TEST', [
+            'post' => $post->id,
+            'image' => $post->image,
+        ]);
+
         $this->uploadImageToCloudinary($post);
     }
+
 
     public function updated(Post $post): void
     {
@@ -26,21 +32,9 @@ class PostObserver
         try {
 
             if (!$post->image) {
-                Log::info('No image found for post', [
+                Log::info('No image found', [
                     'post_id' => $post->id
                 ]);
-
-                return;
-            }
-
-
-            // Si image la deja yon URL, pa repete upload
-            if (str_starts_with($post->image, 'http')) {
-
-                Log::info('Image already URL', [
-                    'image' => $post->image
-                ]);
-
                 return;
             }
 
@@ -86,7 +80,6 @@ class PostObserver
 
             Log::error('Observer Cloudinary Error', [
                 'message' => $e->getMessage(),
-                'file' => $e->getFile(),
                 'line' => $e->getLine(),
             ]);
         }
