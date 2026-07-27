@@ -9,22 +9,31 @@ class PostObserver
 {
     public function created(Post $post): void
     {
-        if ($post->image) {
+        try {
 
-            $path = storage_path('app/public/' . ltrim($post->image, '/'));
+            if ($post->image) {
 
-            if (file_exists($path)) {
+                $path = storage_path('app/public/' . ltrim($post->image, '/'));
 
-                $url = app(CloudinaryService::class)
-                    ->upload(
-                        $path,
-                        'cledinfos/posts'
-                    );
+                if (file_exists($path)) {
 
-                $post->update([
-                    'image_url' => $url,
-                ]);
+                    $url = app(\App\Services\CloudinaryService::class)
+                        ->upload(
+                            $path,
+                            'cledinfos/posts'
+                        );
+
+                    $post->updateQuietly([
+                        'image_url' => $url,
+                    ]);
+                }
             }
+
+        } catch (\Throwable $e) {
+
+            \Log::error('Observer Cloudinary Error', [
+                'message' => $e->getMessage(),
+            ]);
         }
     }
 }
