@@ -54,14 +54,19 @@ class PostForm
                 ->preload()
                 ->searchable(),
 
-            FileUpload::make('image')
+           FileUpload::make('image')
                 ->label('Image principale')
                 ->image()
                 ->imageEditor()
-                ->disk('public')
-                ->directory('posts')
-                ->visibility('public')
-                ->required(),
+                ->required()
+                ->saveUploadedFileUsing(function ($file) {
+
+                    return app(\App\Services\CloudinaryService::class)
+                        ->upload(
+                            $file->getRealPath(),
+                            'cledinfos/posts'
+                        );
+                }),
 
             RichEditor::make('content')
                 ->label('Contenu')

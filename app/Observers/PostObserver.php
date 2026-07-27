@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\Post;
 use App\Services\CloudinaryService;
+use Illuminate\Support\Facades\Log;
 
 class PostObserver
 {
