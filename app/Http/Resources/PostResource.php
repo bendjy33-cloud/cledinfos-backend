@@ -18,8 +18,11 @@ class PostResource extends JsonResource
 
             'slug' => $this->slug,
 
-             'image' => $this->image,
+            'image' => $this->image
+                ? asset('storage/' . $this->image)
+                : null,
                 
+            'image_url' => $this->image_url,
 
             'content' => $this->content,
 
