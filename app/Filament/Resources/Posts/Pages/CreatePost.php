@@ -12,20 +12,25 @@ class CreatePost extends CreateRecord
 {
     protected static string $resource = PostResource::class;
 
-
     protected function handleRecordCreation(array $data): Model
     {
+        $post = parent::handleRecordCreation($data);
+
         try {
 
-            $post = parent::handleRecordCreation($data);
-
+            Log::info('POST CREATED', [
+                'id' => $post->id,
+                'image' => $post->image,
+            ]);
 
             if ($post->image) {
 
-                $path = storage_path(
-                    'app/public/' . $post->image
-                );
+                $path = storage_path('app/public/' . $post->image);
 
+                Log::info('LOCAL IMAGE', [
+                    'path' => $path,
+                    'exists' => file_exists($path),
+                ]);
 
                 if (file_exists($path)) {
 
@@ -34,35 +39,31 @@ class CreatePost extends CreateRecord
                         'cledinfos/posts'
                     );
 
+                    Log::info('CLOUDINARY URL', [
+                        'url' => $url,
+                    ]);
 
-                    $post->updateQuietly([
+                    $post->update([
                         'image_url' => $url,
                     ]);
 
+                    $post->refresh();
 
-                    Log::info('Cloudinary upload success', [
-                        'url' => $url,
-                    ]);
-                }
-                else {
-
-                    Log::error('Image file not found', [
-                        'path' => $path,
+                    Log::info('IMAGE URL SAVED', [
+                        'image_url' => $post->image_url,
                     ]);
                 }
             }
 
-
-            return $post;
-
-
         } catch (\Throwable $e) {
 
-            dd(
-                $e->getMessage(),
-                $e->getFile(),
-                $e->getLine()
-            );
+            Log::error('Cloudinary upload failed', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
         }
+
+        return $post;
     }
 }

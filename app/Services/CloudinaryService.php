@@ -2,38 +2,28 @@
 
 namespace App\Services;
 
+use Cloudinary\Configuration\Configuration;
 use Cloudinary\Api\Upload\UploadApi;
-use Illuminate\Support\Facades\Log;
 
 class CloudinaryService
 {
     public function upload(string $path, string $folder): string
     {
-        try {
+        Configuration::instance([
+            'cloud' => [
+                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+                'api_key'    => env('CLOUDINARY_API_KEY'),
+                'api_secret' => env('CLOUDINARY_API_SECRET'),
+            ],
+            'url' => [
+                'secure' => true,
+            ],
+        ]);
 
-            $config = [
-                'cloud' => [
-                    'cloud_name' => config('cloudinary.cloud.cloud_name'),
-                    'api_key' => config('cloudinary.cloud.api_key'),
-                    'api_secret' => config('cloudinary.cloud.api_secret'),
-                ],
-            ];
+        $result = (new UploadApi())->upload($path, [
+            'folder' => $folder,
+        ]);
 
-            $upload = new UploadApi($config);
-
-            $result = $upload->upload($path, [
-                'folder' => $folder,
-            ]);
-
-            return $result['secure_url'];
-
-        } catch (\Throwable $e) {
-
-            Log::error('Cloudinary Upload Error', [
-                'message' => $e->getMessage(),
-            ]);
-
-            throw $e;
-        }
+        return $result['secure_url'];
     }
 }
