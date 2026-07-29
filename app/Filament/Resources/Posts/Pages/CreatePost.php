@@ -78,10 +78,27 @@ class CreatePost extends CreateRecord
             ]);
 
 
-            Post::where('id', $post->id)
-                ->update([
-                    'image_url' => $url,
-                ]);
+          try {
+
+            $updated = Post::where('id', $post->id)->update([
+                'image_url' => $url,
+            ]);
+
+            Log::info('UPDATE RESULT', [
+                'updated' => $updated,
+            ]);
+
+        } catch (\Throwable $e) {
+
+            Log::error('DATABASE UPDATE FAILED', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            throw $e;
+        }
 
 
             Log::info('AFTER DATABASE UPDATE', [
