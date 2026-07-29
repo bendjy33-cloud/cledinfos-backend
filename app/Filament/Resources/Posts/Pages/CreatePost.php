@@ -43,8 +43,11 @@ class CreatePost extends CreateRecord
                         'url' => $url,
                     ]);
 
-                    $post->update([
-                        'image_url' => $url,
+                    $post->image_url = $url;
+                    $post->save();
+
+                    dd([
+                        'saved' => $post->fresh()->image_url,
                     ]);
 
                     $post->refresh();
