@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Posts\Pages;
 
 use App\Filament\Resources\Posts\PostResource;
+use App\Models\Post;
 use App\Services\CloudinaryService;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
@@ -25,52 +26,77 @@ class CreatePost extends CreateRecord
                 'image' => $post->image,
             ]);
 
+
             if (! $post->image) {
-                Log::warning('NO IMAGE FOUND');
+
+                Log::warning('NO IMAGE FOUND', [
+                    'post_id' => $post->id,
+                ]);
+
                 return $post;
             }
 
-            $path = storage_path('app/public/' . $post->image);
+
+            $path = storage_path(
+                'app/public/' . $post->image
+            );
+
 
             Log::info('LOCAL IMAGE', [
                 'path' => $path,
                 'exists' => file_exists($path),
             ]);
 
+
             if (! file_exists($path)) {
-                Log::error('LOCAL FILE NOT FOUND');
+
+                Log::error('LOCAL FILE NOT FOUND', [
+                    'path' => $path,
+                ]);
+
                 return $post;
             }
 
+
             Log::info('START CLOUDINARY');
+
 
             $url = app(CloudinaryService::class)->upload(
                 $path,
                 'cledinfos/posts'
             );
 
+
             Log::info('CLOUDINARY URL', [
                 'url' => $url,
             ]);
 
-            $post->image_url = $url;
 
-            Log::info('BEFORE SAVE', [
-                'image_url' => $post->image_url,
+            Log::info('BEFORE DATABASE UPDATE', [
+                'id' => $post->id,
+                'image_url' => $url,
             ]);
 
-            $saved = $post->save();
 
-            Log::info('SAVE RESULT', [
-                'saved' => $saved,
+            Post::where('id', $post->id)
+                ->update([
+                    'image_url' => $url,
+                ]);
+
+
+            Log::info('AFTER DATABASE UPDATE', [
+                'id' => $post->id,
             ]);
+
 
             $post->refresh();
 
-            Log::info('IMAGE URL SAVED', [
+
+            Log::info('FINAL POST DATA', [
                 'id' => $post->id,
                 'image_url' => $post->image_url,
             ]);
+
 
         } catch (\Throwable $e) {
 
@@ -78,9 +104,9 @@ class CreatePost extends CreateRecord
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
             ]);
         }
+
 
         return $post;
     }
