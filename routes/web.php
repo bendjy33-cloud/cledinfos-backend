@@ -29,3 +29,15 @@ Route::get('/test-cloudinary', function () {
         ),
     ];
 });
+
+
+use Illuminate\Support\Facades\DB;
+
+Route::get('/db-test', function () {
+
+    return [
+        'connection' => DB::connection()->getDatabaseName(),
+        'posts' => DB::table('posts')->count(),
+    ];
+
+});
