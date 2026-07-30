@@ -12,6 +12,8 @@ class Setting extends Model
 
         'logo',
 
+        'logo_url',
+
         'email',
 
         'phone',
