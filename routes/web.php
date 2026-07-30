@@ -41,3 +41,11 @@ Route::get('/db-test', function () {
     ];
 
 });
+
+use Illuminate\Support\Facades\Artisan;
+
+Route::get('/run-migrations', function () {
+    Artisan::call('migrate', ['--force' => true]);
+
+    return Artisan::output();
+});
