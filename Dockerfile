@@ -31,4 +31,4 @@ RUN mkdir -p storage/framework/cache \
 
 RUN chmod -R 775 storage bootstrap/cache
 
-CMD ["/start.sh"]
+CMD php artisan migrate --force && /start.sh
