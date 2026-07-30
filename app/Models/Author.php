@@ -13,6 +13,7 @@ class Author extends Model
         'name',
         'slug',
         'photo',
+        'photo_url',
         'job_title',
         'bio',
         'facebook',
