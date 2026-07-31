@@ -16,9 +16,10 @@ class AuthorResource extends JsonResource
 
             'slug' => $this->slug,
 
-            'photo' => $this->photo
-                ? asset('storage/' . $this->photo)
-                : null,
+            'photo' => $this->photo_url
+                ?: ($this->photo
+                    ? asset('storage/' . $this->photo)
+                    : null),
 
             'job_title' => $this->job_title,
 

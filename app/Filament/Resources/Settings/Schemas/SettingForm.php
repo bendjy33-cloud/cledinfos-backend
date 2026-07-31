@@ -1,53 +1,50 @@
 <?php
 
-namespace App\Filament\Resources\Settings\Pages;
+namespace App\Filament\Resources\Settings\Schemas;
 
-use App\Filament\Resources\Settings\SettingResource;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
-use Filament\Actions\DeleteAction;
-use Filament\Resources\Pages\EditRecord;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\FileUpload;
 
-class EditSetting extends EditRecord
+class SettingForm
 {
-    protected static string $resource = SettingResource::class;
-
-    protected function getHeaderActions(): array
+    public static function configure(Schema $schema): Schema
     {
-        return [
-            DeleteAction::make(),
-        ];
-    }
-
-    protected function afterSave(): void
-    {
-        $record = $this->record;
-
-        if (! $record->logo) {
-            return;
-        }
-
-        $path = storage_path('app/public/' . $record->logo);
-
-        if (! file_exists($path)) {
-            return;
-        }
-
-        try {
-            $upload = Cloudinary::upload($path, [
-                'folder' => 'cledinfos/settings',
+        return $schema
+            ->components([
+                TextInput::make('site_name')
+                    ->required()
+                    ->default('Clé d\'Infos'),
+                FileUpload::make('logo')
+                    ->image()
+                    ->directory('settings')
+                    ->disk('public'),
+                TextInput::make('email')
+                    ->label('Email address')
+                    ->email()
+                    ->default(null),
+                TextInput::make('phone')
+                    ->tel()
+                    ->default(null),
+                TextInput::make('address')
+                    ->default(null),
+                TextInput::make('facebook')
+                    ->url(),
+                TextInput::make('instagram')
+                    ->url(),
+                TextInput::make('youtube')
+                    ->url(),
+                TextInput::make('twitter')
+                    ->url(),
+                Textarea::make('about')
+                    ->default(null)
+                    ->columnSpanFull(),
+                TextInput::make('breaking_news')
+                    ->default(null),
+                Toggle::make('breaking_active')
+                    ->required(),
             ]);
-
-            $record->update([
-                'logo_url' => $upload->getSecurePath(),
-            ]);
-
-            Storage::disk('public')->delete($record->logo);
-        } catch (\Throwable $e) {
-            Log::error('LOGO CLOUDINARY ERROR', [
-                'message' => $e->getMessage(),
-            ]);
-        }
     }
 }
