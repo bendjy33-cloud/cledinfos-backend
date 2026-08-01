@@ -17,36 +17,10 @@ class SettingForm
                 TextInput::make('site_name')
                     ->required()
                     ->default('Clé d\'Infos'),
-               FileUpload::make('logo')
+                FileUpload::make('logo')
                     ->image()
-                    ->disk('public')
                     ->directory('settings')
-                    ->saveUploadedFileUsing(function ($file) {
-
-                        try {
-
-                            $upload = Cloudinary::upload(
-                                $file->getRealPath(),
-                                [
-                                    'folder' => 'cledinfos/settings'
-                                ]
-                            );
-
-                            return $upload->getSecurePath();
-
-                        } catch (\Throwable $e) {
-
-                            Log::error(
-                                'Cloudinary logo error',
-                                [
-                                    'message'=>$e->getMessage()
-                                ]
-                            );
-
-                            return null;
-                        }
-
-                    }),
+                    ->disk('public'),
                 TextInput::make('email')
                     ->label('Email address')
                     ->email()
