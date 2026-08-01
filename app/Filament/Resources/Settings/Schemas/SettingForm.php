@@ -20,7 +20,7 @@ class SettingForm
                 FileUpload::make('logo')
                     ->image()
                     ->directory('settings')
-                    ->disk('cloudinary'),
+                    ->disk('public'),
                 TextInput::make('email')
                     ->label('Email address')
                     ->email()
