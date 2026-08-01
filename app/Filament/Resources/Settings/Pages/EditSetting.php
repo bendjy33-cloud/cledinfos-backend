@@ -62,13 +62,17 @@ class EditSetting extends EditRecord
                 'url' => $url,
             ]);
 
-            $record->update([
+           $record->update([
                 'logo_url' => $url,
             ]);
 
-            Storage::disk('public')->delete($record->logo);
+            $record->refresh();
 
-            Log::info('DATABASE UPDATED');
+            Log::info('DATABASE UPDATED', [
+                'logo' => $record->logo,
+                'logo_url' => $record->logo_url,
+            ]);
+
 
         } catch (\Throwable $e) {
 
