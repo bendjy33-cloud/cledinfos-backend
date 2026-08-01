@@ -27,6 +27,10 @@ class EditSetting extends EditRecord
 
         $record = $this->record;
 
+        Log::info('LOGO VALUE', [
+            'logo' => $record->logo,
+        ]);
+
         if (! $record->logo) {
             Log::warning('No logo found.');
             return;
