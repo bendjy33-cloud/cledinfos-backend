@@ -8,6 +8,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use App\Services\CloudinaryService;
 
 class EditSetting extends EditRecord
 {
@@ -31,42 +32,47 @@ class EditSetting extends EditRecord
             return;
         }
 
-        // Si logo a deja sou Cloudinary, pa re-upload li
+        // Si deja upload sou Cloudinary
         if ($record->logo_url) {
             return;
         }
 
         $path = storage_path('app/public/' . $record->logo);
 
-        Log::info('Checking file', [
+        Log::info('CHECK FILE', [
             'path' => $path,
             'exists' => file_exists($path),
         ]);
 
         if (! file_exists($path)) {
-            Log::warning('Logo file not found.');
+            Log::error('FILE NOT FOUND');
             return;
         }
 
         try {
 
-            $upload = Cloudinary::upload($path, [
-                'folder' => 'cledinfos/settings',
+            Log::info('UPLOAD CLOUDINARY START');
+
+            $url = app(CloudinaryService::class)->upload(
+                $path,
+                'cledinfos/settings'
+            );
+
+            Log::info('CLOUDINARY DONE', [
+                'url' => $url,
             ]);
 
             $record->update([
-                'logo_url' => $upload->getSecurePath(),
+                'logo_url' => $url,
             ]);
 
             Storage::disk('public')->delete($record->logo);
 
-            Log::info('Cloudinary upload SUCCESS', [
-                'url' => $upload->getSecurePath(),
-            ]);
+            Log::info('DATABASE UPDATED');
 
         } catch (\Throwable $e) {
 
-            Log::error('Cloudinary ERROR', [
+            Log::error('CLOUDINARY ERROR', [
                 'message' => $e->getMessage(),
             ]);
         }
