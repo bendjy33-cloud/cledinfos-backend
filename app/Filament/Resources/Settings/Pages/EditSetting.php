@@ -3,12 +3,11 @@
 namespace App\Filament\Resources\Settings\Pages;
 
 use App\Filament\Resources\Settings\SettingResource;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use App\Services\CloudinaryService;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use App\Services\CloudinaryService;
 
 class EditSetting extends EditRecord
 {
@@ -27,17 +26,18 @@ class EditSetting extends EditRecord
 
         $record = $this->record;
 
-        Log::info('LOGO VALUE', [
+        Log::info('RECORD', [
             'logo' => $record->logo,
+            'logo_url' => $record->logo_url,
         ]);
 
         if (! $record->logo) {
-            Log::warning('No logo found.');
+            Log::warning('NO LOGO FOUND');
             return;
         }
 
-        // Si deja upload sou Cloudinary
         if ($record->logo_url) {
+            Log::info('LOGO ALREADY ON CLOUDINARY');
             return;
         }
 
@@ -55,30 +55,34 @@ class EditSetting extends EditRecord
 
         try {
 
-            Log::info('UPLOAD CLOUDINARY START');
+            Log::info('BEFORE CLOUDINARY');
 
             $url = app(CloudinaryService::class)->upload(
                 $path,
                 'cledinfos/settings'
             );
 
-            Log::info('CLOUDINARY DONE', [
+            Log::info('AFTER CLOUDINARY', [
                 'url' => $url,
             ]);
 
-           $record->update([
+            $record->update([
                 'logo_url' => $url,
+            ]);
+
+            Log::info('AFTER UPDATE', [
+                'logo_url' => $record->fresh()->logo_url,
             ]);
 
             Storage::disk('public')->delete($record->logo);
 
             Log::info('DATABASE UPDATED');
 
-
         } catch (\Throwable $e) {
 
             Log::error('CLOUDINARY ERROR', [
                 'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
             ]);
         }
     }
