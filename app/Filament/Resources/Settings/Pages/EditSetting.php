@@ -22,6 +22,6 @@ class EditSetting extends EditRecord
 
     protected function afterSave(): void
     {
-        dd('afterSave is working');
+       Log::info('afterSave START');
     }
 }
