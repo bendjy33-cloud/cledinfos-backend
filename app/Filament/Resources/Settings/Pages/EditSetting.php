@@ -66,11 +66,10 @@ class EditSetting extends EditRecord
                 'url' => $url,
             ]);
 
-            $record->update([
-                'logo_url' => $url,
-            ]);
+           $record->logo_url = $url;
+            $record->save();
 
-            Log::info('AFTER UPDATE', [
+            Log::info('LOGO_URL SAVED', [
                 'logo_url' => $record->fresh()->logo_url,
             ]);
 
