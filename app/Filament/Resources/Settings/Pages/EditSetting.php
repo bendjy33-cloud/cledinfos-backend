@@ -57,6 +57,12 @@ class EditSetting extends EditRecord
 
             Log::info('BEFORE CLOUDINARY');
 
+            Log::info('LOGO PATH', [
+                'logo' => $record->logo,
+                'path' => $path,
+                'exists' => file_exists($path),
+            ]);
+
             $url = app(CloudinaryService::class)->upload(
                 $path,
                 'cledinfos/settings'
