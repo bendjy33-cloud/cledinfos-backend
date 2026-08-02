@@ -72,12 +72,16 @@ class EditSetting extends EditRecord
                 'url' => $url,
             ]);
 
-           $record->logo_url = $url;
-            $record->save();
+           $setting = \App\Models\Setting::find($record->id);
 
-            Log::info('LOGO_URL SAVED', [
-                'logo_url' => $record->fresh()->logo_url,
+            $setting->logo_url = $url;
+
+            $setting->save();
+
+            Log::info('SETTING SAVED', [
+                'logo_url' => $setting->fresh()->logo_url,
             ]);
+
 
             Storage::disk('public')->delete($record->logo);
 
