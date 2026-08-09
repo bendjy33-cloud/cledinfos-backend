@@ -10,11 +10,25 @@ class Category extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
+        'name_fr',
+        'name_en',
+        'name_ht',
+
         'slug',
-        'description',
-        'is_active'
+
+        'description_fr',
+        'description_en',
+        'description_ht',
+
+        'is_active',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+        ];
+    }
 
     public function posts()
     {

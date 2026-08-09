@@ -8,18 +8,19 @@ use App\Filament\Resources\Posts\Pages\ListPosts;
 use App\Filament\Resources\Posts\Schemas\PostForm;
 use App\Filament\Resources\Posts\Tables\PostsTable;
 use App\Models\Post;
-use Filament\Resources\Resource;
-use Filament\Tables\Table;
 use BackedEnum;
+use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Tables\Table;
 
 class PostResource extends Resource
 {
     protected static ?string $model = Post::class;
 
-    protected static ?string $recordTitleAttribute = 'title';
+    protected static ?string $recordTitleAttribute = 'title_fr';
 
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|BackedEnum|null $navigationIcon =
+        'heroicon-o-rectangle-stack';
 
     public static function form(Schema $schema): Schema
     {

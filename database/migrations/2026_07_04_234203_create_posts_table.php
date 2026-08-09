@@ -10,35 +10,56 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::create('posts', function (Blueprint $table) {
-        $table->id();
+    {
+        Schema::create('posts', function (Blueprint $table) {
+            $table->id();
 
-        $table->string('title');
-        $table->string('slug')->unique();
+            // French
+            $table->string('title_fr');
+            $table->longText('content_fr');
+            $table->text('meta_description_fr')->nullable();
+            $table->string('keywords_fr')->nullable();
 
-        $table->longText('content');
+            // English
+            $table->string('title_en')->nullable();
+            $table->longText('content_en')->nullable();
+            $table->text('meta_description_en')->nullable();
+            $table->string('keywords_en')->nullable();
 
-        $table->string('image')->nullable();
-        $table->string('image_url')->nullable();
+            // Haitian Creole
+            $table->string('title_ht')->nullable();
+            $table->longText('content_ht')->nullable();
+            $table->text('meta_description_ht')->nullable();
+            $table->string('keywords_ht')->nullable();
 
-        $table->foreignId('category_id')->constrained()->onDelete('cascade');
+            // SEO
+            $table->string('meta_title')->nullable();
 
-        $table->text('meta_description')->nullable();
+            // General
+            $table->string('slug')->unique();
 
-        $table->string('keywords')->nullable();
+            // Images
+            $table->string('image')->nullable();
+            $table->string('image_url')->nullable();
 
-        $table->boolean('featured')->default(false);
+            // Relationships
+            $table->foreignId('category_id')
+                ->constrained('categories')
+                ->cascadeOnDelete();
 
-        $table->unsignedBigInteger('views')->default(0);
+            $table->foreignId('author_id')
+                ->constrained('authors')
+                ->cascadeOnDelete();
 
-        $table->boolean('is_published')->default(false);
+            // Status and statistics
+            $table->boolean('featured')->default(false);
+            $table->unsignedBigInteger('views')->default(0);
+            $table->boolean('is_published')->default(false);
+            $table->timestamp('published_at')->nullable();
 
-        $table->timestamp('published_at')->nullable();
-
-        $table->timestamps();
-    });
-}
+            $table->timestamps();
+        });
+    }
 
     /**
      * Reverse the migrations.

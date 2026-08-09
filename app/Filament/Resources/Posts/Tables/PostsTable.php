@@ -21,12 +21,25 @@ class PostsTable
                     ->disk('public')
                     ->square(),
 
-                Tables\Columns\TextColumn::make('title')
+                Tables\Columns\TextColumn::make('title_fr')
+                    ->label('Titre')
                     ->limit(50)
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('category.name')
+                Tables\Columns\TextColumn::make('title_en')
+                    ->label('Title')
+                    ->limit(50)
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('title_ht')
+                    ->label('Tit')
+                    ->limit(50)
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('category.name_fr')
                     ->label('Category')
                     ->sortable(),
 
@@ -56,7 +69,7 @@ class PostsTable
                     ->label('Publié'),
 
                 SelectFilter::make('category')
-                    ->relationship('category', 'name'),
+                    ->relationship('category', 'name_fr'),
             ])
             ->recordActions([
                 EditAction::make(),

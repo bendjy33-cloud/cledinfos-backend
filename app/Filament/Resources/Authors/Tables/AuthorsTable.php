@@ -16,9 +16,8 @@ class AuthorsTable
         return $table
             ->columns([
 
-                Tables\Columns\ImageColumn::make('photo')
+                Tables\Columns\ImageColumn::make('photo_url')
                     ->label('Photo')
-                    ->disk('public')
                     ->circular(),
 
                 Tables\Columns\TextColumn::make('name')

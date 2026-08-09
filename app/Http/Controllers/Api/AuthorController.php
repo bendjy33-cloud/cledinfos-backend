@@ -24,7 +24,6 @@ class AuthorController extends Controller
                 'posts' => function ($query) {
                     $query->with([
                             'category',
-                            'author',
                             'tags',
                         ])
                         ->where('is_published', true)

@@ -29,7 +29,7 @@ class TagController extends Controller
 
             'posts' => PostResource::collection(
                 $tag->posts()
-                    ->with(['category', 'tags'])
+                    ->with(['category', 'author', 'tags'])
                     ->where('is_published', true)
                     ->latest('published_at')
                     ->get()

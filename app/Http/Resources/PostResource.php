@@ -4,8 +4,6 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\TagResource;
-use App\Http\Resources\AuthorResource;
 
 class PostResource extends JsonResource
 {
@@ -14,35 +12,50 @@ class PostResource extends JsonResource
         return [
             'id' => $this->id,
 
-            'title' => $this->title,
+            // Titles
+            'title_fr' => $this->title_fr,
+            'title_en' => $this->title_en,
+            'title_ht' => $this->title_ht,
 
+            // Slug
             'slug' => $this->slug,
 
-            'image' => $this->image_url
-                ?: ($this->image ? asset('storage/' . $this->image) : null),
-
+            // Images
+            'image' => $this->image_url,
             'image_url' => $this->image_url,
 
-            'content' => $this->content,
+            // Content
+            'content_fr' => $this->content_fr,
+            'content_en' => $this->content_en,
+            'content_ht' => $this->content_ht,
 
-            'meta_description' => $this->meta_description,
+            // SEO
 
-            'keywords' => $this->keywords,
+            'meta_description_fr' => $this->meta_description_fr,
+            'meta_description_en' => $this->meta_description_en,
+            'meta_description_ht' => $this->meta_description_ht,
 
+            'keywords_fr' => $this->keywords_fr,
+            'keywords_en' => $this->keywords_en,
+            'keywords_ht' => $this->keywords_ht,
+
+            // Status / statistics
             'featured' => $this->featured,
-
             'views' => $this->views,
-
+            'is_published' => $this->is_published,
             'published_at' => $this->published_at,
 
+            // Category
             'category' => new CategoryResource(
                 $this->whenLoaded('category')
             ),
 
+            // Author
             'author' => new AuthorResource(
                 $this->whenLoaded('author')
             ),
 
+            // Tags
             'tags' => TagResource::collection(
                 $this->whenLoaded('tags')
             ),

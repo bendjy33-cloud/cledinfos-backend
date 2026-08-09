@@ -34,6 +34,7 @@ class AuthorForm
                     ->image()
                     ->disk('public')
                     ->directory('authors')
+                    ->visibility('public')
                     ->imageEditor(),
 
                 TextInput::make('job_title')

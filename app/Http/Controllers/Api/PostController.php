@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         return PostResource::collection(
             Post::with(['category', 'author', 'tags'])
@@ -19,21 +19,20 @@ class PostController extends Controller
         );
     }
 
-    public function show(string $slug)
+    public function show(Request $request, string $slug)
     {
         $post = Post::with(['category', 'author', 'tags'])
             ->where('slug', $slug)
             ->where('is_published', true)
             ->firstOrFail();
 
-        // Incrémente automatiquement les vues
         $post->increment('views');
         $post->refresh();
 
         return new PostResource($post);
     }
 
-    public function related(string $slug)
+    public function related(Request $request, string $slug)
     {
         $post = Post::where('slug', $slug)->firstOrFail();
 
@@ -48,7 +47,7 @@ class PostController extends Controller
         );
     }
 
-    public function byCategory(string $slug)
+    public function byCategory(Request $request, string $slug)
     {
         return PostResource::collection(
             Post::with(['category', 'author', 'tags'])
@@ -69,16 +68,27 @@ class PostController extends Controller
             Post::with(['category', 'author', 'tags'])
                 ->where('is_published', true)
                 ->where(function ($builder) use ($query) {
-                    $builder->where('title', 'like', "%{$query}%")
-                        ->orWhere('content', 'like', "%{$query}%")
-                        ->orWhere('keywords', 'like', "%{$query}%");
+                    $builder
+                        ->where('title_fr', 'like', "%{$query}%")
+                        ->orWhere('title_en', 'like', "%{$query}%")
+                        ->orWhere('title_ht', 'like', "%{$query}%")
+                        ->orWhere('content_fr', 'like', "%{$query}%")
+                        ->orWhere('content_en', 'like', "%{$query}%")
+                        ->orWhere('content_ht', 'like', "%{$query}%")
+                        ->orWhere('keywords_fr', 'like', "%{$query}%")
+                        ->orWhere('keywords_en', 'like', "%{$query}%")
+                        ->orWhere('keywords_ht', 'like', "%{$query}%")
+                        ->orWhere('meta_title', 'like', "%{$query}%")
+                        ->orWhere('meta_description_fr', 'like', "%{$query}%")
+                        ->orWhere('meta_description_en', 'like', "%{$query}%")
+                        ->orWhere('meta_description_ht', 'like', "%{$query}%");
                 })
                 ->latest('published_at')
                 ->get()
         );
     }
 
-    public function featured()
+    public function featured(Request $request)
     {
         return PostResource::collection(
             Post::with(['category', 'author', 'tags'])
@@ -90,7 +100,7 @@ class PostController extends Controller
         );
     }
 
-    public function mostRead()
+    public function mostRead(Request $request)
     {
         return PostResource::collection(
             Post::with(['category', 'author', 'tags'])
@@ -101,7 +111,7 @@ class PostController extends Controller
         );
     }
 
-    public function trending()
+    public function trending(Request $request)
     {
         return PostResource::collection(
             Post::with(['category', 'author', 'tags'])
@@ -112,7 +122,7 @@ class PostController extends Controller
         );
     }
 
-    public function incrementView($slug)
+    public function incrementView(string $slug)
     {
         $post = Post::where('slug', $slug)->firstOrFail();
 

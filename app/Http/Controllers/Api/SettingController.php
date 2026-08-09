@@ -11,12 +11,32 @@ class SettingController extends Controller
     {
         $setting = Setting::first();
 
-        if ($setting) {
-
-            $setting->logo = $setting->logo_url
-                ?: asset('storage/' . $setting->logo);
+        if (! $setting) {
+            return response()->json(null);
         }
 
-        return response()->json($setting);
+        $logo = $setting->logo_url
+            ?: (
+                $setting->logo
+                    ? asset('storage/' . $setting->logo)
+                    : null
+            );
+
+        return response()->json([
+            'id' => $setting->id,
+            'site_name' => $setting->site_name,
+            'logo' => $logo,
+            'logo_url' => $setting->logo_url,
+            'email' => $setting->email,
+            'phone' => $setting->phone,
+            'address' => $setting->address,
+            'facebook' => $setting->facebook,
+            'instagram' => $setting->instagram,
+            'youtube' => $setting->youtube,
+            'twitter' => $setting->twitter,
+            'about' => $setting->about,
+            'breaking_news' => $setting->breaking_news,
+            'breaking_active' => $setting->breaking_active,
+        ]);
     }
 }

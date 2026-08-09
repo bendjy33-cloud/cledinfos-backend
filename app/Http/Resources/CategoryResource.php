@@ -11,8 +11,18 @@ class CategoryResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
+
+            'name_fr' => $this->name_fr,
+            'name_en' => $this->name_en,
+            'name_ht' => $this->name_ht,
+
             'slug' => $this->slug,
+
+            'description_fr' => $this->description_fr,
+            'description_en' => $this->description_en,
+            'description_ht' => $this->description_ht,
+
+            'is_active' => $this->is_active,
         ];
     }
 }

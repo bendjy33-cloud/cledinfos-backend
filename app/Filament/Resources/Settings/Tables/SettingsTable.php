@@ -17,31 +17,50 @@ class SettingsTable
             ->columns([
                 TextColumn::make('site_name')
                     ->searchable(),
+
                 TextColumn::make('logo')
+                    ->label('Logo')
                     ->searchable(),
+
+                TextColumn::make('logo_url')
+                    ->label('Cloudinary URL')
+                    ->limit(50)
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('email')
                     ->label('Email address')
                     ->searchable(),
+
                 TextColumn::make('phone')
                     ->searchable(),
+
                 TextColumn::make('address')
                     ->searchable(),
+
                 TextColumn::make('facebook')
                     ->searchable(),
+
                 TextColumn::make('instagram')
                     ->searchable(),
+
                 TextColumn::make('youtube')
                     ->searchable(),
+
                 TextColumn::make('twitter')
                     ->searchable(),
+
                 TextColumn::make('breaking_news')
                     ->searchable(),
+
                 IconColumn::make('breaking_active')
                     ->boolean(),
+
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()

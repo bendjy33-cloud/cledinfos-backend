@@ -21,7 +21,7 @@ class CategoryResource extends Resource
 
     protected static ?string $navigationLabel = 'Categories';
 
-    protected static ?string $recordTitleAttribute = 'name';
+    protected static ?string $recordTitleAttribute = 'name_fr';
 
     public static function form(Schema $schema): Schema
     {

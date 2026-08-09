@@ -10,15 +10,36 @@ class Post extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title',
+        // French
+        'title_fr',
+        'content_fr',
+        'meta_description_fr',
+        'keywords_fr',
+
+        // English
+        'title_en',
+        'content_en',
+        'meta_description_en',
+        'keywords_en',
+
+        // Haitian Creole
+        'title_ht',
+        'content_ht',
+        'meta_description_ht',
+        'keywords_ht',
+
+        // General
         'slug',
-        'content',
+
+        // Images
         'image',
         'image_url',
+
+        // Relationships
         'category_id',
         'author_id',
-        'meta_description',
-        'keywords',
+
+        // Status
         'featured',
         'views',
         'is_published',
@@ -38,14 +59,17 @@ class Post extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
     public function tags()
     {
         return $this->belongsToMany(Tag::class);
     }
+
     public function comments()
     {
         return $this->hasMany(Comment::class);
     }
+
     public function author()
     {
         return $this->belongsTo(Author::class);

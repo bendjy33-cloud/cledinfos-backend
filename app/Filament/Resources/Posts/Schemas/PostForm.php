@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Posts\Schemas;
 
-use App\Services\CloudinaryService;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
@@ -11,7 +10,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class PostForm
@@ -20,8 +18,8 @@ class PostForm
     {
         return $schema->components([
 
-            TextInput::make('title')
-                ->label('Titre')
+            TextInput::make('title_fr')
+                ->label('Titre (Français)')
                 ->required()
                 ->live(onBlur: true)
                 ->afterStateUpdated(function ($state, callable $set, $get) {
@@ -30,6 +28,55 @@ class PostForm
                     }
                 }),
 
+            RichEditor::make('content_fr')
+                ->label('Contenu (Français)')
+                ->required()
+                ->columnSpanFull(),
+
+            Textarea::make('meta_description_fr')
+                ->label('Meta Description (Français)')
+                ->rows(4)
+                ->maxLength(160)
+                ->columnSpanFull(),
+
+            TextInput::make('keywords_fr')
+                ->label('Keywords (Français)')
+                ->helperText('Séparer par des virgules'),
+
+            TextInput::make('title_en')
+                ->label('Title (English)'),
+
+            RichEditor::make('content_en')
+                ->label('Content (English)')
+                ->columnSpanFull(),
+
+            Textarea::make('meta_description_en')
+                ->label('Meta Description (English)')
+                ->rows(4)
+                ->maxLength(160)
+                ->columnSpanFull(),
+
+            TextInput::make('keywords_en')
+                ->label('Keywords (English)')
+                ->helperText('Separate with commas'),
+
+            TextInput::make('title_ht')
+                ->label('Tit (Kreyòl)'),
+
+            RichEditor::make('content_ht')
+                ->label('Kontni (Kreyòl)')
+                ->columnSpanFull(),
+
+            Textarea::make('meta_description_ht')
+                ->label('Meta Description (Kreyòl)')
+                ->rows(4)
+                ->maxLength(160)
+                ->columnSpanFull(),
+
+            TextInput::make('keywords_ht')
+                ->label('Keywords (Kreyòl)')
+                ->helperText('Separe ak vigil'),
+
             TextInput::make('slug')
                 ->label('Slug')
                 ->required()
@@ -37,18 +84,20 @@ class PostForm
 
             Select::make('category_id')
                 ->label('Catégorie')
-                ->relationship('category', 'name')
+                ->relationship('category', 'name_fr')
                 ->searchable()
                 ->preload()
                 ->required(),
 
             Select::make('author_id')
+                ->label('Auteur')
                 ->relationship('author', 'name')
                 ->searchable()
                 ->preload()
                 ->required(),
 
             Select::make('tags')
+                ->label('Tags')
                 ->relationship('tags', 'name')
                 ->multiple()
                 ->preload()
@@ -63,25 +112,6 @@ class PostForm
                 ->visibility('public')
                 ->required(),
 
-            RichEditor::make('content')
-                ->label('Contenu')
-                ->required()
-                ->columnSpanFull(),
-
-            TextInput::make('meta_title')
-                ->label('Meta Title')
-                ->maxLength(255),
-
-            Textarea::make('meta_description')
-                ->label('Meta Description')
-                ->rows(4)
-                ->maxLength(160)
-                ->columnSpanFull(),
-
-            TextInput::make('keywords')
-                ->label('Keywords')
-                ->helperText('Séparer par des virgules'),
-
             Toggle::make('featured')
                 ->label('Article à la Une')
                 ->default(false),
@@ -94,7 +124,6 @@ class PostForm
                 ->label('Date publication')
                 ->default(now())
                 ->disabled(fn ($get) => ! $get('is_published')),
-
         ]);
     }
 }

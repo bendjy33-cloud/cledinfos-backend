@@ -9,35 +9,31 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('settings', function (Blueprint $table) {
-
             $table->id();
 
             $table->string('site_name')->default("Clé d'Infos");
 
+            // Local/temporary logo
             $table->string('logo')->nullable();
 
+            // Cloudinary logo URL
+            $table->string('logo_url')->nullable();
+
             $table->string('email')->nullable();
-
             $table->string('phone')->nullable();
-
             $table->string('address')->nullable();
 
             $table->string('facebook')->nullable();
-
             $table->string('instagram')->nullable();
-
             $table->string('youtube')->nullable();
-
             $table->string('twitter')->nullable();
 
             $table->text('about')->nullable();
 
             $table->string('breaking_news')->nullable();
-
             $table->boolean('breaking_active')->default(true);
 
             $table->timestamps();
-
         });
     }
 
