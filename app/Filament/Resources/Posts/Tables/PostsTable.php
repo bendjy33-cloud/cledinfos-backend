@@ -69,7 +69,8 @@ class PostsTable
                     ->label('Publié'),
 
                 SelectFilter::make('category')
-                    ->relationship('category', 'name_fr'),
+                    ->label('Category')
+                    ->relationship('category', 'slug'),
             ])
             ->recordActions([
                 EditAction::make(),
