@@ -13,13 +13,10 @@ class Category extends Model
         'name_fr',
         'name_en',
         'name_ht',
-
         'slug',
-
         'description_fr',
         'description_en',
         'description_ht',
-
         'is_active',
     ];
 
@@ -33,5 +30,14 @@ class Category extends Model
     public function posts()
     {
         return $this->hasMany(Post::class);
+    }
+
+    public function getDisplayNameAttribute(): string
+    {
+        return $this->name_fr
+            ?: $this->name_en
+            ?: $this->name_ht
+            ?: $this->slug
+            ?: 'Sans nom';
     }
 }

@@ -85,6 +85,9 @@ class PostForm
             Select::make('category_id')
                 ->label('Catégorie')
                 ->relationship('category', 'name_fr')
+                ->getOptionLabelFromRecordUsing(
+                    fn ($record): string => $record->display_name
+                )
                 ->searchable()
                 ->preload()
                 ->required(),
