@@ -14,10 +14,34 @@ class BreakingNewsForm
         return $schema
             ->components([
 
-                TextInput::make('title')
-                    ->label('Titre')
+                // =========================
+                // FRENCH
+                // =========================
+
+                TextInput::make('title_fr')
+                    ->label('Titre (Français)')
                     ->required()
                     ->maxLength(255),
+
+                // =========================
+                // ENGLISH
+                // =========================
+
+                TextInput::make('title_en')
+                    ->label('Title (English)')
+                    ->maxLength(255),
+
+                // =========================
+                // KREYÒL
+                // =========================
+
+                TextInput::make('title_ht')
+                    ->label('Tit (Kreyòl)')
+                    ->maxLength(255),
+
+                // =========================
+                // GENERAL
+                // =========================
 
                 TextInput::make('link')
                     ->label('Lien')

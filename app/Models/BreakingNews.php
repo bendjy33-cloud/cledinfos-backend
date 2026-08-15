@@ -11,6 +11,9 @@ class BreakingNews extends Model
 
     protected $fillable = [
         'title',
+        'title_fr',
+        'title_en',
+        'title_ht',
         'link',
         'active',
         'starts_at',

@@ -18,12 +18,16 @@ class PostForm
     {
         return $schema->components([
 
+            // ========================================
+            // FRENCH
+            // ========================================
+
             TextInput::make('title_fr')
                 ->label('Titre (Français)')
                 ->required()
                 ->live(onBlur: true)
                 ->afterStateUpdated(function ($state, callable $set, $get) {
-                    if (! $get('slug')) {
+                    if (! $get('slug') && filled($state)) {
                         $set('slug', Str::slug($state));
                     }
                 }),
@@ -43,6 +47,10 @@ class PostForm
                 ->label('Keywords (Français)')
                 ->helperText('Séparer par des virgules'),
 
+            // ========================================
+            // ENGLISH
+            // ========================================
+
             TextInput::make('title_en')
                 ->label('Title (English)'),
 
@@ -59,6 +67,10 @@ class PostForm
             TextInput::make('keywords_en')
                 ->label('Keywords (English)')
                 ->helperText('Separate with commas'),
+
+            // ========================================
+            // KREYÒL
+            // ========================================
 
             TextInput::make('title_ht')
                 ->label('Tit (Kreyòl)'),
@@ -77,34 +89,67 @@ class PostForm
                 ->label('Keywords (Kreyòl)')
                 ->helperText('Separe ak vigil'),
 
+            // ========================================
+            // GENERAL
+            // ========================================
+
             TextInput::make('slug')
                 ->label('Slug')
                 ->required()
+                ->maxLength(255)
                 ->unique(ignoreRecord: true),
+
+            // ========================================
+            // CATEGORY
+            // ========================================
 
             Select::make('category_id')
                 ->label('Catégorie')
                 ->relationship('category', 'name_fr')
                 ->getOptionLabelFromRecordUsing(
-                    fn ($record): string => $record->display_name
+                    fn ($record): string =>
+                        $record->name_fr
+                        ?? $record->name_en
+                        ?? $record->name_ht
+                        ?? 'Sans catégorie'
                 )
                 ->searchable()
                 ->preload()
                 ->required(),
 
+            // ========================================
+            // AUTHOR
+            // ========================================
+
             Select::make('author_id')
                 ->label('Auteur')
                 ->relationship('author', 'name')
+                ->getOptionLabelFromRecordUsing(
+                    fn ($record): string =>
+                        $record->name ?? 'Auteur sans nom'
+                )
                 ->searchable()
                 ->preload()
                 ->required(),
 
+            // ========================================
+            // TAGS
+            // ========================================
+
             Select::make('tags')
                 ->label('Tags')
                 ->relationship('tags', 'name')
+                ->getOptionLabelFromRecordUsing(
+                    fn ($record): string =>
+                        $record->name ?? 'Tag sans nom'
+                )
                 ->multiple()
                 ->preload()
                 ->searchable(),
+
+            // ========================================
+            // IMAGE
+            // ========================================
 
             FileUpload::make('image')
                 ->label('Image principale')
@@ -114,6 +159,10 @@ class PostForm
                 ->directory('posts')
                 ->visibility('public')
                 ->required(),
+
+            // ========================================
+            // OPTIONS
+            // ========================================
 
             Toggle::make('featured')
                 ->label('Article à la Une')

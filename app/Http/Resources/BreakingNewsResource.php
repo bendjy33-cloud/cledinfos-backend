@@ -9,11 +9,26 @@ class BreakingNewsResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        return [
+        $locale = $request->get('locale', 'fr');
 
+        $title = match ($locale) {
+            'en' => $this->title_en
+                ?? $this->title_fr
+                ?? $this->title_ht,
+
+            'ht' => $this->title_ht
+                ?? $this->title_fr
+                ?? $this->title_en,
+
+            default => $this->title_fr
+                ?? $this->title_en
+                ?? $this->title_ht,
+        };
+
+        return [
             'id' => $this->id,
 
-            'title' => $this->title,
+            'title' => $title,
 
             'link' => $this->link,
 
@@ -22,7 +37,6 @@ class BreakingNewsResource extends JsonResource
             'starts_at' => $this->starts_at,
 
             'ends_at' => $this->ends_at,
-
         ];
     }
 }

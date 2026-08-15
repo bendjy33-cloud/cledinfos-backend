@@ -20,6 +20,10 @@ class Category extends Model
         'is_active',
     ];
 
+    protected $appends = [
+        'display_name',
+    ];
+
     protected function casts(): array
     {
         return [
@@ -27,17 +31,19 @@ class Category extends Model
         ];
     }
 
-    public function posts()
-    {
-        return $this->hasMany(Post::class);
-    }
-
+    /**
+     * Nom d'affichage utilisé par Filament.
+     */
     public function getDisplayNameAttribute(): string
     {
         return $this->name_fr
-            ?: $this->name_en
-            ?: $this->name_ht
-            ?: $this->slug
-            ?: 'Sans nom';
+            ?? $this->name_en
+            ?? $this->name_ht
+            ?? 'Sans catégorie';
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
     }
 }
