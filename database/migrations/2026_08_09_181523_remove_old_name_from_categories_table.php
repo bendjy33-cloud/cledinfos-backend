@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('categories', function (Blueprint $table) {
-            $table->dropColumn('name');
-        });
+        if (Schema::hasColumn('categories', 'name')) {
+            Schema::table('categories', function (Blueprint $table) {
+                $table->dropColumn('name');
+            });
+        }
     }
 
     /**
@@ -21,8 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('categories', function (Blueprint $table) {
-            $table->string('name')->nullable();
-        });
+        if (!Schema::hasColumn('categories', 'name')) {
+            Schema::table('categories', function (Blueprint $table) {
+                $table->string('name')->nullable();
+            });
+        }
     }
 };
