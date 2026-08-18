@@ -71,21 +71,3 @@ Route::get('/check-admin', function () {
         'password_hash_exists' => !empty($user->password),
     ]);
 });
-
-use Illuminate\Support\Facades\Hash;
-
-Route::get('/create-admin', function () {
-    $user = User::updateOrCreate(
-        ['email' => 'admin@cledinfos.com'],
-        [
-            'name' => 'Admin',
-            'password' => Hash::make('Admin@12345'),
-        ]
-    );
-
-    return response()->json([
-        'success' => true,
-        'message' => 'Admin created successfully',
-        'email' => $user->email,
-    ]);
-});
