@@ -97,15 +97,12 @@ return new class extends Migration
             'title_fr',
             'title_en',
             'title_ht',
-
             'content_fr',
             'content_en',
             'content_ht',
-
             'meta_description_fr',
             'meta_description_en',
             'meta_description_ht',
-
             'keywords_fr',
             'keywords_en',
             'keywords_ht',

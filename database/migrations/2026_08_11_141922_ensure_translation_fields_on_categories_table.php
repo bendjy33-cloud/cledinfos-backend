@@ -11,31 +11,44 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('categories', function (Blueprint $table) {
-            if (!Schema::hasColumn('categories', 'name_fr')) {
+        // French
+        if (!Schema::hasColumn('categories', 'name_fr')) {
+            Schema::table('categories', function (Blueprint $table) {
                 $table->string('name_fr')->nullable();
-            }
+            });
+        }
 
-            if (!Schema::hasColumn('categories', 'description_fr')) {
+        if (!Schema::hasColumn('categories', 'description_fr')) {
+            Schema::table('categories', function (Blueprint $table) {
                 $table->text('description_fr')->nullable();
-            }
+            });
+        }
 
-            if (!Schema::hasColumn('categories', 'name_en')) {
+        // English
+        if (!Schema::hasColumn('categories', 'name_en')) {
+            Schema::table('categories', function (Blueprint $table) {
                 $table->string('name_en')->nullable();
-            }
+            });
+        }
 
-            if (!Schema::hasColumn('categories', 'description_en')) {
+        if (!Schema::hasColumn('categories', 'description_en')) {
+            Schema::table('categories', function (Blueprint $table) {
                 $table->text('description_en')->nullable();
-            }
+            });
+        }
 
-            if (!Schema::hasColumn('categories', 'name_ht')) {
+        // Haitian Creole
+        if (!Schema::hasColumn('categories', 'name_ht')) {
+            Schema::table('categories', function (Blueprint $table) {
                 $table->string('name_ht')->nullable();
-            }
+            });
+        }
 
-            if (!Schema::hasColumn('categories', 'description_ht')) {
+        if (!Schema::hasColumn('categories', 'description_ht')) {
+            Schema::table('categories', function (Blueprint $table) {
                 $table->text('description_ht')->nullable();
-            }
-        });
+            });
+        }
     }
 
     /**
@@ -43,21 +56,21 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('categories', function (Blueprint $table) {
-            $columns = [
-                'name_fr',
-                'description_fr',
-                'name_en',
-                'description_en',
-                'name_ht',
-                'description_ht',
-            ];
+        $columns = [
+            'name_fr',
+            'description_fr',
+            'name_en',
+            'description_en',
+            'name_ht',
+            'description_ht',
+        ];
 
-            foreach ($columns as $column) {
-                if (Schema::hasColumn('categories', $column)) {
+        foreach ($columns as $column) {
+            if (Schema::hasColumn('categories', $column)) {
+                Schema::table('categories', function (Blueprint $table) use ($column) {
                     $table->dropColumn($column);
-                }
+                });
             }
-        });
+        }
     }
 };
