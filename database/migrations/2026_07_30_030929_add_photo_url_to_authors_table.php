@@ -8,15 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('authors', function (Blueprint $table) {
-            $table->string('photo_url')->nullable()->after('photo');
-        });
+        if (!Schema::hasColumn('authors', 'photo_url')) {
+            Schema::table('authors', function (Blueprint $table) {
+                $table->string('photo_url')->nullable();
+            });
+        }
     }
 
     public function down(): void
     {
-        Schema::table('authors', function (Blueprint $table) {
-            $table->dropColumn('photo_url');
-        });
+        if (Schema::hasColumn('authors', 'photo_url')) {
+            Schema::table('authors', function (Blueprint $table) {
+                $table->dropColumn('photo_url');
+            });
+        }
     }
 };
