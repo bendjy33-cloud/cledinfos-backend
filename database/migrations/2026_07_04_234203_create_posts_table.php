@@ -47,10 +47,6 @@ return new class extends Migration
                 ->constrained('categories')
                 ->cascadeOnDelete();
 
-            $table->foreignId('author_id')
-                ->constrained('authors')
-                ->cascadeOnDelete();
-
             // Status and statistics
             $table->boolean('featured')->default(false);
             $table->unsignedBigInteger('views')->default(0);

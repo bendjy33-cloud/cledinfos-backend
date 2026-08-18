@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('author_id')
                 ->nullable()
                 ->after('category_id')
-                ->constrained()
+                ->constrained('authors')
                 ->nullOnDelete();
 
         });
