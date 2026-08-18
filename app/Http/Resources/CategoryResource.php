@@ -27,7 +27,6 @@ class CategoryResource extends JsonResource
             'description_ht' => $this->description_ht,
             'description_es' => $this->description_es,
 
-            // Status
             'is_active' => $this->is_active,
         ];
     }
