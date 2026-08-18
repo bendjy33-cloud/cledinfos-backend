@@ -49,3 +49,25 @@ Route::get('/run-migrations', function () {
 
     return Artisan::output();
 });
+
+use App\Models\User;
+
+
+Route::get('/check-admin', function () {
+    $user = User::where('email', 'admin@cledinfos.com')->first();
+
+    if (!$user) {
+        return response()->json([
+            'exists' => false,
+            'message' => 'Admin user pa egziste nan database Render.'
+        ]);
+    }
+
+    return response()->json([
+        'exists' => true,
+        'id' => $user->id,
+        'name' => $user->name,
+        'email' => $user->email,
+        'password_hash_exists' => !empty($user->password),
+    ]);
+});
