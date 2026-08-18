@@ -10,13 +10,24 @@ class Category extends Model
     use HasFactory;
 
     protected $fillable = [
+        // French
         'name_fr',
-        'name_en',
-        'name_ht',
-        'slug',
         'description_fr',
+
+        // English
+        'name_en',
         'description_en',
+
+        // Haitian Creole
+        'name_ht',
         'description_ht',
+
+        // Spanish
+        'name_es',
+        'description_es',
+
+        // General
+        'slug',
         'is_active',
     ];
 
@@ -39,6 +50,7 @@ class Category extends Model
         return $this->name_fr
             ?? $this->name_en
             ?? $this->name_ht
+            ?? $this->name_es
             ?? 'Sans catégorie';
     }
 

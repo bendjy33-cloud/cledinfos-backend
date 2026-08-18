@@ -28,6 +28,12 @@ class Post extends Model
         'meta_description_ht',
         'keywords_ht',
 
+        // Spanish
+        'title_es',
+        'content_es',
+        'meta_description_es',
+        'keywords_es',
+
         // General
         'slug',
 

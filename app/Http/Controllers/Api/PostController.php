@@ -72,16 +72,25 @@ class PostController extends Controller
                         ->where('title_fr', 'like', "%{$query}%")
                         ->orWhere('title_en', 'like', "%{$query}%")
                         ->orWhere('title_ht', 'like', "%{$query}%")
+                        ->orWhere('title_es', 'like', "%{$query}%")
+
                         ->orWhere('content_fr', 'like', "%{$query}%")
                         ->orWhere('content_en', 'like', "%{$query}%")
                         ->orWhere('content_ht', 'like', "%{$query}%")
+                        ->orWhere('content_es', 'like', "%{$query}%")
+
+
                         ->orWhere('keywords_fr', 'like', "%{$query}%")
                         ->orWhere('keywords_en', 'like', "%{$query}%")
                         ->orWhere('keywords_ht', 'like', "%{$query}%")
+                        ->orWhere('keywords_es', 'like', "%{$query}%")
+
                         ->orWhere('meta_title', 'like', "%{$query}%")
+
                         ->orWhere('meta_description_fr', 'like', "%{$query}%")
                         ->orWhere('meta_description_en', 'like', "%{$query}%")
-                        ->orWhere('meta_description_ht', 'like', "%{$query}%");
+                        ->orWhere('meta_description_ht', 'like', "%{$query}%")
+                        ->orWhere('meta_description_es', 'like', "%{$query}%");
                 })
                 ->latest('published_at')
                 ->get()
