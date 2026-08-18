@@ -61,6 +61,19 @@ class CategoryForm
                     ->columnSpanFull(),
 
                 // =========================
+                // SPANISH
+                // =========================
+
+                TextInput::make('name_es')
+                    ->label('Nombre (Español)')
+                    ->maxLength(255),
+
+                Textarea::make('description_es')
+                    ->label('Descripción (Español)')
+                    ->rows(4)
+                    ->columnSpanFull(),
+
+                // =========================
                 // GENERAL
                 // =========================
 

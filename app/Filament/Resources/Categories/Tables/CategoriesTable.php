@@ -30,6 +30,11 @@ class CategoriesTable
                     ->searchable()
                     ->sortable(),
 
+                TextColumn::make('name_es')
+                ->label('Español')
+                ->searchable()
+                ->sortable(),
+
                 TextColumn::make('slug')
                     ->searchable(),
 

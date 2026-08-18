@@ -39,6 +39,12 @@ class PostsTable
                     ->searchable()
                     ->sortable(),
 
+                Tables\Columns\TextColumn::make('title_es')
+                    ->label('Español')
+                    ->limit(50)
+                    ->searchable()
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('category.name_fr')
                     ->label('Category')
                     ->sortable(),

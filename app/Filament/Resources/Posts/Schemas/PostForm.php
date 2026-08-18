@@ -90,6 +90,27 @@ class PostForm
                 ->helperText('Separe ak vigil'),
 
             // ========================================
+            // SPANISH
+            // ========================================
+
+            TextInput::make('title_es')
+                ->label('Título (Español)'),
+
+            RichEditor::make('content_es')
+                ->label('Contenido (Español)')
+                ->columnSpanFull(),
+
+            Textarea::make('meta_description_es')
+                ->label('Meta Description (Español)')
+                ->rows(4)
+                ->maxLength(160)
+                ->columnSpanFull(),
+
+            TextInput::make('keywords_es')
+                ->label('Keywords (Español)')
+                ->helperText('Separar por comas'),
+
+            // ========================================
             // GENERAL
             // ========================================
 
@@ -111,6 +132,7 @@ class PostForm
                         $record->name_fr
                         ?? $record->name_en
                         ?? $record->name_ht
+                        ?? $record->name_es
                         ?? 'Sans catégorie'
                 )
                 ->searchable()
