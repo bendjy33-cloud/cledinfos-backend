@@ -48,6 +48,11 @@ class SettingForm
                 TextInput::make('twitter')
                     ->url(),
 
+                TextInput::make('tiktok')
+                    ->url(),
+                    TextInput::make('whatsapp')
+                    ->url(),
+
                 Textarea::make('about')
                     ->default(null)
                     ->columnSpanFull(),

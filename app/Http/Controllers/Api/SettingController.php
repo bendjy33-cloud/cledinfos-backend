@@ -34,6 +34,8 @@ class SettingController extends Controller
             'instagram' => $setting->instagram,
             'youtube' => $setting->youtube,
             'twitter' => $setting->twitter,
+            'tiktok' => $setting->tiktok,
+            'whatsapp' => $setting->whatsapp,
             'about' => $setting->about,
             'breaking_news' => $setting->breaking_news,
             'breaking_active' => $setting->breaking_active,

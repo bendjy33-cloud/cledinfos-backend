@@ -28,6 +28,10 @@ class Setting extends Model
 
         'twitter',
 
+        'tiktok',
+
+        'whatsapp',
+
         'about',
 
         'breaking_news',
