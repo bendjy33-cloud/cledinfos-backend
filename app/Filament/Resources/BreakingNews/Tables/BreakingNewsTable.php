@@ -17,10 +17,22 @@ class BreakingNewsTable
         return $table
             ->columns([
 
-                TextColumn::make('title')
-                    ->label('Titre')
+                TextColumn::make('title_fr')
+                    ->label('Français')
                     ->searchable()
                     ->sortable(),
+
+                TextColumn::make('title_en')
+                    ->label('English')
+                    ->searchable(),
+
+                TextColumn::make('title_ht')
+                    ->label('Kreyòl')
+                    ->searchable(),
+
+                TextColumn::make('title_es')
+                    ->label('Español')
+                    ->searchable(),
 
                 TextColumn::make('link')
                     ->label('Lien')

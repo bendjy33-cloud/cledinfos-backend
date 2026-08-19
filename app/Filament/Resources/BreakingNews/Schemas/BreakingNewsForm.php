@@ -40,6 +40,14 @@ class BreakingNewsForm
                     ->maxLength(255),
 
                 // =========================
+                // SPANISH
+                // =========================
+
+                TextInput::make('title_es')
+                    ->label('Título (Español)')
+                    ->maxLength(255),
+
+                // =========================
                 // GENERAL
                 // =========================
 

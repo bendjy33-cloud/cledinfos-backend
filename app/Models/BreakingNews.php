@@ -14,6 +14,7 @@ class BreakingNews extends Model
         'title_fr',
         'title_en',
         'title_ht',
+        'title_es',
         'link',
         'active',
         'starts_at',

@@ -12,17 +12,26 @@ class BreakingNewsResource extends JsonResource
         $locale = $request->get('locale', 'fr');
 
         $title = match ($locale) {
+
             'en' => $this->title_en
                 ?? $this->title_fr
-                ?? $this->title_ht,
+                ?? $this->title_ht
+                ?? $this->title_es,
 
             'ht' => $this->title_ht
                 ?? $this->title_fr
-                ?? $this->title_en,
+                ?? $this->title_en
+                ?? $this->title_es,
+
+            'es' => $this->title_es
+                ?? $this->title_en
+                ?? $this->title_fr
+                ?? $this->title_ht,
 
             default => $this->title_fr
                 ?? $this->title_en
-                ?? $this->title_ht,
+                ?? $this->title_ht
+                ?? $this->title_es,
         };
 
         return [
