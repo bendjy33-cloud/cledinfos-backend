@@ -47,9 +47,6 @@ class SettingsTable
                 TextColumn::make('youtube')
                     ->searchable(),
 
-                TextColumn::make('twitter')
-                    ->searchable(),
-
                 TextColumn::make('breaking_news')
                     ->searchable(),
 

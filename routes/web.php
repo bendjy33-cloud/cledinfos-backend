@@ -1,73 +1,104 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Models\Post;
-use App\Services\CloudinaryService;
+
+/*
+|--------------------------------------------------------------------------
+| Public Web Routes
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/test', function () {
-    return "Laravel OK";
-});
 
-Route::get('/test-cloudinary', function () {
+/*
+|--------------------------------------------------------------------------
+| Development / Testing Routes
+|--------------------------------------------------------------------------
+|
+| These routes are available ONLY locally.
+| They are completely disabled in production.
+|
+*/
 
-    $post = Post::latest()->first();
+if (app()->environment('local')) {
 
-    $path = storage_path('app/public/' . $post->image);
+    Route::get('/test', function () {
+        return 'Laravel OK';
+    });
 
-    return [
-        'image' => $post->image,
-        'image_url' => $post->image_url,
-        'path' => $path,
-        'exists' => file_exists($path),
-        'upload' => app(CloudinaryService::class)->upload(
-            $path,
-            'cledinfos/posts'
-        ),
-    ];
-});
+    Route::get('/test-cloudinary', function () {
 
+        $post = \App\Models\Post::latest()->first();
 
-use Illuminate\Support\Facades\DB;
+        if (!$post) {
+            return response()->json([
+                'error' => 'No post found.',
+            ], 404);
+        }
 
-Route::get('/db-test', function () {
+        $path = storage_path(
+            'app/public/' . $post->image
+        );
 
-    return [
-        'connection' => DB::connection()->getDatabaseName(),
-        'posts' => DB::table('posts')->count(),
-    ];
+        return [
+            'image' => $post->image,
+            'image_url' => $post->image_url,
+            'path' => $path,
+            'exists' => file_exists($path),
 
-});
+            'upload' => app(
+                \App\Services\CloudinaryService::class
+            )->upload(
+                $path,
+                'cledinfos/posts'
+            ),
+        ];
+    });
 
-use Illuminate\Support\Facades\Artisan;
+    Route::get('/db-test', function () {
 
-Route::get('/run-migrations', function () {
-    Artisan::call('migrate', ['--force' => true]);
+        return [
+            'connection' => \Illuminate\Support\Facades\DB::connection()
+                ->getDatabaseName(),
 
-    return Artisan::output();
-});
+            'posts' => \Illuminate\Support\Facades\DB::table('posts')
+                ->count(),
+        ];
+    });
 
-use App\Models\User;
+    Route::get('/run-migrations', function () {
 
+        \Illuminate\Support\Facades\Artisan::call(
+            'migrate',
+            ['--force' => true]
+        );
 
-Route::get('/check-admin', function () {
-    $user = User::where('email', 'admin@cledinfos.com')->first();
+        return \Illuminate\Support\Facades\Artisan::output();
+    });
 
-    if (!$user) {
+    Route::get('/check-admin', function () {
+
+        $user = \App\Models\User::where(
+            'email',
+            'admin@cledinfos.com'
+        )->first();
+
+        if (!$user) {
+            return response()->json([
+                'exists' => false,
+                'message' => 'Admin user pa egziste.',
+            ]);
+        }
+
         return response()->json([
-            'exists' => false,
-            'message' => 'Admin user pa egziste nan database Render.'
+            'exists' => true,
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'password_hash_exists' => !empty($user->password),
         ]);
-    }
-
-    return response()->json([
-        'exists' => true,
-        'id' => $user->id,
-        'name' => $user->name,
-        'email' => $user->email,
-        'password_hash_exists' => !empty($user->password),
-    ]);
-});
+    });
+}

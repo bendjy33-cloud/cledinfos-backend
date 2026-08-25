@@ -26,8 +26,6 @@ class Setting extends Model
 
         'youtube',
 
-        'twitter',
-
         'tiktok',
 
         'whatsapp',

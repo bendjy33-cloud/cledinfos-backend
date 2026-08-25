@@ -33,7 +33,6 @@ class SettingController extends Controller
             'facebook' => $setting->facebook,
             'instagram' => $setting->instagram,
             'youtube' => $setting->youtube,
-            'twitter' => $setting->twitter,
             'tiktok' => $setting->tiktok,
             'whatsapp' => $setting->whatsapp,
             'about' => $setting->about,

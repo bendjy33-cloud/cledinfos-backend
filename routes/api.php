@@ -1,7 +1,7 @@
-
 <?php
 
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\HomeController;
@@ -15,55 +15,191 @@ use App\Http\Controllers\Api\AdController;
 use App\Http\Controllers\Api\BreakingNewsController;
 
 
-Route::get('/test-api', function () {
-    return response()->json([
-        'status' => 'OK'
-    ]);
+/*
+|--------------------------------------------------------------------------
+| Public API
+|--------------------------------------------------------------------------
+|
+| These endpoints are consumed by the Next.js frontend.
+| General public requests are protected with the API rate limiter.
+|
+*/
+
+Route::middleware('throttle:api')->group(function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Home
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/home', [HomeController::class, 'index']);
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Posts
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/posts', [PostController::class, 'index']);
+
+    Route::get('/posts/{slug}', [PostController::class, 'show']);
+
+    Route::get(
+        '/posts/{slug}/related',
+        [PostController::class, 'related']
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Categories
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/categories', [CategoryController::class, 'index']);
+
+    Route::get(
+        '/categories/{slug}/posts',
+        [PostController::class, 'byCategory']
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Featured / Popular / Trending
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/featured-posts',
+        [PostController::class, 'featured']
+    );
+
+    Route::get(
+        '/most-read',
+        [PostController::class, 'mostRead']
+    );
+
+    Route::get(
+        '/trending',
+        [PostController::class, 'trending']
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Search
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/search', [PostController::class, 'search']);
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Tags
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/tags', [TagController::class, 'index']);
+
+    Route::get(
+        '/tags/{slug}',
+        [TagController::class, 'show']
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Authors
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/authors',
+        [AuthorController::class, 'index']
+    );
+
+    Route::get(
+        '/authors/{slug}',
+        [AuthorController::class, 'show']
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Comments - READ
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/posts/{slug}/comments',
+        [CommentController::class, 'index']
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Ads / Breaking News / Settings
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/ads', [AdController::class, 'index']);
+
+    Route::get(
+        '/breaking-news',
+        [BreakingNewsController::class, 'index']
+    );
+
+    Route::get(
+        '/settings',
+        [SettingController::class, 'index']
+    );
 });
 
 
-Route::get('/categories/{slug}/posts', [PostController::class, 'byCategory']);
+/*
+|--------------------------------------------------------------------------
+| View Counter
+|--------------------------------------------------------------------------
+|
+| This endpoint is called when someone views an article.
+| It has its own limiter because it can be called frequently.
+|
+*/
 
-Route::get('/posts', [PostController::class, 'index']);
-Route::get('/posts/{slug}', [PostController::class, 'show']);
+Route::post(
+    '/posts/{slug}/view',
+    [PostController::class, 'incrementView']
+)->middleware('throttle:views');
 
-Route::get('/categories', [CategoryController::class, 'index']);
 
-Route::get('/search', [PostController::class, 'search']);
+/*
+|--------------------------------------------------------------------------
+| User Interactions
+|--------------------------------------------------------------------------
+|
+| These endpoints accept user input and therefore receive
+| a stricter rate limit.
+|
+*/
 
-Route::get('/featured-posts', [PostController::class, 'featured']);
+Route::middleware('throttle:interactions')->group(function () {
 
-Route::get('/most-read', [PostController::class, 'mostRead']);
+    Route::post(
+        '/posts/{slug}/comments',
+        [CommentController::class, 'store']
+    );
 
-Route::get('/search', [PostController::class, 'search']);
+    Route::post(
+        '/contact',
+        [ContactController::class, 'store']
+    );
 
-Route::get('/home', [HomeController::class, 'index']);
-
-Route::post('/contact', [ContactController::class, 'store']);
-
-Route::get('/posts/{slug}/related', [PostController::class, 'related']);
-
-Route::get('/settings', [SettingController::class, 'index']);
-
-Route::post('/newsletter', [NewsletterController::class, 'store']);
-
-Route::post('/posts/{slug}/view', [PostController::class,'incrementView']);
-
-Route::get('/tags', [TagController::class, 'index']);
-
-Route::get('/tags/{slug}', [TagController::class, 'show']);
-
-Route::get('/authors', [AuthorController::class, 'index']);
-
-Route::get('/authors/{slug}', [AuthorController::class, 'show']);
-
-Route::get('/posts/{slug}/comments', [CommentController::class, 'index']);
-
-Route::get('/ads', [AdController::class, 'index']);
-
-Route::post('/posts/{slug}/comments', [CommentController::class, 'store']);
-
-Route::get('/breaking-news', [BreakingNewsController::class, 'index']);
-
-Route::get('/trending', [PostController::class, 'trending']);
-
+    Route::post(
+        '/newsletter',
+        [NewsletterController::class, 'store']
+    );
+});

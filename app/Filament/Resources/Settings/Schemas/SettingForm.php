@@ -45,12 +45,10 @@ class SettingForm
                 TextInput::make('youtube')
                     ->url(),
 
-                TextInput::make('twitter')
-                    ->url(),
-
                 TextInput::make('tiktok')
                     ->url(),
-                    TextInput::make('whatsapp')
+
+                 TextInput::make('whatsapp')
                     ->url(),
 
                 Textarea::make('about')
