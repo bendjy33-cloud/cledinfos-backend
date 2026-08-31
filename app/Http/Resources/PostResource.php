@@ -1,12 +1,9 @@
 <?php
 
-
 namespace App\Http\Resources;
-
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-
 
 class PostResource extends JsonResource
 {
@@ -15,22 +12,25 @@ class PostResource extends JsonResource
         return [
             'id' => $this->id,
 
-
             // Titles
             'title_fr' => $this->title_fr,
-            'title_en' => $this->title_en,
-            'title_ht' => $this->title_ht,
-            'title_es' => $this->title_es,
+            'subtitle_fr' => $this->subtitle_fr,
 
+            'title_en' => $this->title_en,
+            'subtitle_en' => $this->subtitle_en,
+
+            'title_ht' => $this->title_ht,
+            'subtitle_ht' => $this->subtitle_ht,
+
+            'title_es' => $this->title_es,
+            'subtitle_es' => $this->subtitle_es,
 
             // Slug
             'slug' => $this->slug,
 
-
             // Images
             'image' => $this->image_url,
             'image_url' => $this->image_url,
-
 
             // Content
             'content_fr' => $this->content_fr,
@@ -38,19 +38,16 @@ class PostResource extends JsonResource
             'content_ht' => $this->content_ht,
             'content_es' => $this->content_es,
 
-
             // SEO
             'meta_description_fr' => $this->meta_description_fr,
             'meta_description_en' => $this->meta_description_en,
             'meta_description_ht' => $this->meta_description_ht,
             'meta_description_es' => $this->meta_description_es,
 
-
             'keywords_fr' => $this->keywords_fr,
             'keywords_en' => $this->keywords_en,
             'keywords_ht' => $this->keywords_ht,
             'keywords_es' => $this->keywords_es,
-
 
             // Status / statistics
             'featured' => $this->featured,
@@ -58,18 +55,15 @@ class PostResource extends JsonResource
             'is_published' => $this->is_published,
             'published_at' => $this->published_at,
 
-
             // Category
             'category' => new CategoryResource(
                 $this->whenLoaded('category')
             ),
 
-
             // Author
             'author' => new AuthorResource(
                 $this->whenLoaded('author')
             ),
-
 
             // Tags
             'tags' => TagResource::collection(

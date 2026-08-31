@@ -32,6 +32,11 @@ class PostForm
                     }
                 }),
 
+            Textarea::make('subtitle_fr')
+                ->label('Sous-titre (Français)')
+                ->rows(3)
+                ->columnSpanFull(),
+
             RichEditor::make('content_fr')
                 ->label('Contenu (Français)')
                 ->required()
@@ -54,6 +59,11 @@ class PostForm
             TextInput::make('title_en')
                 ->label('Title (English)'),
 
+            Textarea::make('subtitle_en')
+                ->label('Subtitle (English)')
+                ->rows(3)
+                ->columnSpanFull(),
+
             RichEditor::make('content_en')
                 ->label('Content (English)')
                 ->columnSpanFull(),
@@ -75,6 +85,11 @@ class PostForm
             TextInput::make('title_ht')
                 ->label('Tit (Kreyòl)'),
 
+            Textarea::make('subtitle_ht')
+                ->label('Soutit (Kreyòl)')
+                ->rows(3)
+                ->columnSpanFull(),
+
             RichEditor::make('content_ht')
                 ->label('Kontni (Kreyòl)')
                 ->columnSpanFull(),
@@ -95,6 +110,11 @@ class PostForm
 
             TextInput::make('title_es')
                 ->label('Título (Español)'),
+
+            Textarea::make('subtitle_es')
+                ->label('Subtítulo (Español)')
+                ->rows(3)
+                ->columnSpanFull(),
 
             RichEditor::make('content_es')
                 ->label('Contenido (Español)')

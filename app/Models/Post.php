@@ -12,24 +12,28 @@ class Post extends Model
     protected $fillable = [
         // French
         'title_fr',
+        'subtitle_fr',
         'content_fr',
         'meta_description_fr',
         'keywords_fr',
 
         // English
         'title_en',
+        'subtitle_en',
         'content_en',
         'meta_description_en',
         'keywords_en',
 
         // Haitian Creole
         'title_ht',
+        'subtitle_ht',
         'content_ht',
         'meta_description_ht',
         'keywords_ht',
 
         // Spanish
         'title_es',
+        'subtitle_es',
         'content_es',
         'meta_description_es',
         'keywords_es',
