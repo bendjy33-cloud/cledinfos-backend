@@ -16,7 +16,7 @@ class CommentForm
             ->components([
 
                 Select::make('post_id')
-                    ->relationship('post', 'title')
+                    ->relationship('post', 'title_fr')
                     ->searchable()
                     ->preload()
                     ->required(),
