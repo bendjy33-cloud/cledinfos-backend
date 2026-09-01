@@ -15,7 +15,16 @@ class Author extends Model
         'photo',
         'photo_url',
         'job_title',
+
+        // Multilingual biographies
+        'bio_fr',
+        'bio_en',
+        'bio_ht',
+        'bio_es',
+
+        // Old bio field kept for compatibility
         'bio',
+
         'facebook',
         'twitter',
         'linkedin',
