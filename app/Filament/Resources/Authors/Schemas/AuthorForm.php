@@ -17,6 +17,7 @@ class AuthorForm
             ->components([
 
                 TextInput::make('name')
+                    ->label('Nom')
                     ->required()
                     ->maxLength(255)
                     ->live(onBlur: true)
@@ -26,6 +27,7 @@ class AuthorForm
                     ),
 
                 TextInput::make('slug')
+                    ->label('Slug')
                     ->required()
                     ->unique(ignoreRecord: true),
 
@@ -41,11 +43,28 @@ class AuthorForm
                     ->label('Fonction')
                     ->maxLength(255),
 
-                Textarea::make('bio')
+                Textarea::make('bio_fr')
+                    ->label('Biographie — Français')
+                    ->rows(5)
+                    ->columnSpanFull(),
+
+                Textarea::make('bio_en')
+                    ->label('Biography — English')
+                    ->rows(5)
+                    ->columnSpanFull(),
+
+                Textarea::make('bio_ht')
+                    ->label('Biografi — Kreyòl')
+                    ->rows(5)
+                    ->columnSpanFull(),
+
+                Textarea::make('bio_es')
+                    ->label('Biografía — Español')
                     ->rows(5)
                     ->columnSpanFull(),
 
                 TextInput::make('facebook')
+                    ->label('Facebook')
                     ->url()
                     ->maxLength(255),
 
@@ -55,6 +74,7 @@ class AuthorForm
                     ->maxLength(255),
 
                 TextInput::make('linkedin')
+                    ->label('LinkedIn')
                     ->url()
                     ->maxLength(255),
 
