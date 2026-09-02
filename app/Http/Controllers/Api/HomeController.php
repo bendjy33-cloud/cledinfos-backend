@@ -14,14 +14,27 @@ class HomeController extends Controller
     {
         /*
         |--------------------------------------------------------------------------
-        | HERO
+        | FEATURED
         |--------------------------------------------------------------------------
+        |
+        | Featured = 5 atik ki pi resan yo.
+        |
+        | Egzanp:
+        | 10, 9, 8, 7, 6
+        |
         */
 
-        $hero = Post::with('category')
+        $featured = Post::with([
+            'category',
+            'author',
+            'tags',
+        ])
             ->where('is_published', true)
-            ->latest('published_at')
-            ->first();
+            ->whereNotNull('published_at')
+            ->orderByDesc('published_at')
+            ->orderByDesc('id')
+            ->take(5)
+            ->get();
 
 
         /*
@@ -29,39 +42,50 @@ class HomeController extends Controller
         | LATEST POSTS
         |--------------------------------------------------------------------------
         |
-        | Tout dènye atik yo.
-        | Hero a pa ladan l pou evite menm atik la parèt 2 fwa.
+        | Tout dènye atik yo, kòmanse ak atik ki pi resan an.
         |
         */
 
-        $latest = Post::with('category')
+        $latest = Post::with([
+            'category',
+            'author',
+            'tags',
+        ])
             ->where('is_published', true)
-            ->when(
-                $hero,
-                fn ($query) => $query->where('id', '!=', $hero->id)
-            )
-            ->latest('published_at')
+            ->whereNotNull('published_at')
+            ->orderByDesc('published_at')
+            ->orderByDesc('id')
             ->paginate(9);
 
 
         /*
         |--------------------------------------------------------------------------
-        | FEATURED
+        | TRENDING
         |--------------------------------------------------------------------------
         |
-        | Featured ap itilize menm dènye atik yo.
-        |
-        | Nou retire ->take(4), kidonk pa gen limit 4 ankò.
+        | 5 atik ki gen plis views.
         |
         */
 
-        $featured = Post::with('category')
+        $trending = Post::with([
+            'category',
+            'author',
+            'tags',
+        ])
             ->where('is_published', true)
-            ->when(
-                $hero,
-                fn ($query) => $query->where('id', '!=', $hero->id)
-            )
-            ->latest('published_at')
+            ->orderByDesc('views')
+            ->orderByDesc('id')
+            ->take(5)
+            ->get();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CATEGORIES
+        |--------------------------------------------------------------------------
+        */
+
+        $categories = Category::where('is_active', true)
             ->get();
 
 
@@ -72,16 +96,6 @@ class HomeController extends Controller
         */
 
         return response()->json([
-            /*
-            |--------------------------------------------------------------------------
-            | HERO
-            |--------------------------------------------------------------------------
-            */
-
-            'hero' => $hero
-                ? new PostResource($hero)
-                : null,
-
 
             /*
             |--------------------------------------------------------------------------
@@ -113,36 +127,11 @@ class HomeController extends Controller
 
             /*
             |--------------------------------------------------------------------------
-            | MOST READ
-            |--------------------------------------------------------------------------
-            */
-
-            'mostRead' => PostResource::collection(
-                Post::with('category')
-                    ->where('is_published', true)
-                    ->orderByDesc('views')
-                    ->take(5)
-                    ->get()
-            ),
-
-
-            /*
-            |--------------------------------------------------------------------------
             | TRENDING
             |--------------------------------------------------------------------------
             */
 
-            'trending' => PostResource::collection(
-                Post::with([
-                    'category',
-                    'author',
-                    'tags',
-                ])
-                    ->where('is_published', true)
-                    ->orderByDesc('views')
-                    ->take(5)
-                    ->get()
-            ),
+            'trending' => PostResource::collection($trending),
 
 
             /*
@@ -151,9 +140,7 @@ class HomeController extends Controller
             |--------------------------------------------------------------------------
             */
 
-            'categories' => CategoryResource::collection(
-                Category::where('is_active', true)->get()
-            ),
+            'categories' => CategoryResource::collection($categories),
         ]);
     }
 }
