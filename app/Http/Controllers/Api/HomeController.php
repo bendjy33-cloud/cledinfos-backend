@@ -33,7 +33,7 @@ class HomeController extends Controller
             ->whereNotNull('published_at')
             ->orderByDesc('published_at')
             ->orderByDesc('id')
-            ->take(5)
+            ->take(6)
             ->get();
 
 
