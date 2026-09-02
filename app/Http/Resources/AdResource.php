@@ -17,9 +17,9 @@ class AdResource extends JsonResource
 
             'position' => $this->position,
 
-            'image' => $this->image
-                ? asset('storage/' . $this->image)
-                : null,
+            'image' => $this->image,
+
+            'video' => $this->video,
 
             'url' => $this->url,
 

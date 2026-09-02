@@ -32,11 +32,25 @@ class AdForm
                     ->required(),
 
                 FileUpload::make('image')
-                    ->label('Image')
+                    ->label('Image publicitaire')
                     ->image()
                     ->directory('ads')
                     ->disk('public')
-                    ->required(),
+                    ->nullable()
+                    ->maxSize(10240),
+
+                FileUpload::make('video')
+                    ->label('Vidéo publicitaire')
+                    ->acceptedFileTypes([
+                        'video/mp4',
+                        'video/webm',
+                        'video/ogg',
+                        'video/quicktime',
+                    ])
+                    ->directory('ads/videos')
+                    ->disk('public')
+                    ->nullable()
+                    ->maxSize(102400),
 
                 TextInput::make('url')
                     ->label('Lien')
@@ -48,10 +62,12 @@ class AdForm
                     ->default(true),
 
                 DateTimePicker::make('starts_at')
-                    ->label('Début'),
+                    ->label('Début')
+                    ->nullable(),
 
                 DateTimePicker::make('ends_at')
-                    ->label('Fin'),
+                    ->label('Fin')
+                    ->nullable(),
 
             ]);
     }

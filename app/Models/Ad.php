@@ -13,6 +13,7 @@ class Ad extends Model
         'title',
         'position',
         'image',
+        'video',
         'url',
         'active',
         'starts_at',

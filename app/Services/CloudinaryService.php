@@ -20,9 +20,43 @@ class CloudinaryService
             ],
         ]);
 
-       $result = (new UploadApi())->upload($path, [
+        /*
+        |--------------------------------------------------------------------------
+        | Detect resource type
+        |--------------------------------------------------------------------------
+        */
+
+        $extension = strtolower(
+            pathinfo($path, PATHINFO_EXTENSION)
+        );
+
+        $videoExtensions = [
+            'mp4',
+            'webm',
+            'ogg',
+            'mov',
+            'avi',
+            'mkv',
+            'm4v',
+        ];
+
+        $resourceType = in_array(
+            $extension,
+            $videoExtensions,
+            true
+        )
+            ? 'video'
+            : 'image';
+
+        /*
+        |--------------------------------------------------------------------------
+        | Upload to Cloudinary
+        |--------------------------------------------------------------------------
+        */
+
+        $result = (new UploadApi())->upload($path, [
             'folder' => $folder,
-            'resource_type' => 'image',
+            'resource_type' => $resourceType,
         ]);
 
         return $result['secure_url'];
