@@ -84,4 +84,10 @@ class Post extends Model
     {
         return $this->belongsTo(Author::class);
     }
+
+    public function images()
+    {
+        return $this->hasMany(PostImage::class)
+            ->orderBy('sort_order');
+    }
 }

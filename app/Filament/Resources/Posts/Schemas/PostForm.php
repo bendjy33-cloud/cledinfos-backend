@@ -11,6 +11,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
+use Filament\Forms\Components\Repeater;
 
 class PostForm
 {
@@ -201,6 +202,34 @@ class PostForm
                 ->directory('posts')
                 ->visibility('public')
                 ->required(),
+
+
+            // ========================================
+            // GALERIE PHOTOS
+            // ========================================
+
+            Repeater::make('images')
+                ->label('Photos supplémentaires')
+                ->relationship('images')
+                ->schema([
+                    FileUpload::make('image')
+                        ->label('Photo')
+                        ->image()
+                        ->imageEditor()
+                        ->disk('public')
+                        ->directory('posts/gallery')
+                        ->visibility('public')
+                        ->required(),
+                ])
+                ->reorderable()
+                ->collapsible()
+                ->itemLabel(
+                    fn (array $state): ?string =>
+                        filled($state['image'] ?? null)
+                            ? 'Photo'
+                            : 'Nouvelle photo'
+                )
+                ->columnSpanFull(),
 
             // ========================================
             // OPTIONS

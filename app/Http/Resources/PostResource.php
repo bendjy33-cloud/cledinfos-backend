@@ -32,6 +32,17 @@ class PostResource extends JsonResource
             'image' => $this->image_url,
             'image_url' => $this->image_url,
 
+            'images' => $this->whenLoaded('images', function () {
+                return $this->images->map(function ($image) {
+                    return [
+                        'id' => $image->id,
+                        'image' => $image->image_url,
+                        'image_url' => $image->image_url,
+                        'sort_order' => $image->sort_order,
+                    ];
+                })->values();
+            }),
+
             // Content
             'content_fr' => $this->content_fr,
             'content_en' => $this->content_en,

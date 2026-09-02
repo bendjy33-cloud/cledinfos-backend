@@ -21,7 +21,12 @@ class PostController extends Controller
 
     public function show(Request $request, string $slug)
     {
-        $post = Post::with(['category', 'author', 'tags'])
+        $post = Post::with([
+            'category',
+            'author',
+            'tags',
+            'images',
+        ])
             ->where('slug', $slug)
             ->where('is_published', true)
             ->firstOrFail();
@@ -78,7 +83,6 @@ class PostController extends Controller
                         ->orWhere('content_en', 'like', "%{$query}%")
                         ->orWhere('content_ht', 'like', "%{$query}%")
                         ->orWhere('content_es', 'like', "%{$query}%")
-
 
                         ->orWhere('keywords_fr', 'like', "%{$query}%")
                         ->orWhere('keywords_en', 'like', "%{$query}%")
