@@ -44,7 +44,7 @@ class HomeController extends Controller
         |
         | Tout dènye atik yo, kòmanse ak atik ki pi resan an.
         |
-        */
+       
 
         $latest = Post::with([
             'category',
@@ -55,7 +55,7 @@ class HomeController extends Controller
             ->whereNotNull('published_at')
             ->orderByDesc('published_at')
             ->orderByDesc('id')
-            ->paginate(9);
+            ->paginate(9); */
 
 
         /*
@@ -110,7 +110,7 @@ class HomeController extends Controller
             |--------------------------------------------------------------------------
             | LATEST
             |--------------------------------------------------------------------------
-            */
+            
 
             'latest' => [
                 'data' => PostResource::collection(
@@ -122,7 +122,7 @@ class HomeController extends Controller
                 'last_page' => $latest->lastPage(),
 
                 'total' => $latest->total(),
-            ],
+            ], */
 
 
             /*
