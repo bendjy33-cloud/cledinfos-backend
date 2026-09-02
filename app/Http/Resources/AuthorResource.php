@@ -20,7 +20,18 @@ class AuthorResource extends JsonResource
 
             'photo_url' => $this->photo_url,
 
-            'job_title' => $this->job_title,
+            /*
+            |--------------------------------------------------------------------------
+            | MULTILINGUAL JOB TITLE
+            |--------------------------------------------------------------------------
+            */
+
+            'job_title' => [
+                'fr' => $this->job_title_fr,
+                'en' => $this->job_title_en,
+                'ht' => $this->job_title_ht,
+                'es' => $this->job_title_es,
+            ],
 
             /*
             |--------------------------------------------------------------------------

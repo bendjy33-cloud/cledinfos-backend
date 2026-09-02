@@ -14,7 +14,12 @@ class Author extends Model
         'slug',
         'photo',
         'photo_url',
-        'job_title',
+
+        // Multilingual job titles
+        'job_title_fr',
+        'job_title_en',
+        'job_title_ht',
+        'job_title_es',
 
         // Multilingual biographies
         'bio_fr',
@@ -22,7 +27,8 @@ class Author extends Model
         'bio_ht',
         'bio_es',
 
-        // Old bio field kept for compatibility
+        // Old fields kept for compatibility
+        'job_title',
         'bio',
 
         'facebook',

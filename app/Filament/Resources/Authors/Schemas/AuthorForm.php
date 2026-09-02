@@ -39,9 +39,37 @@ class AuthorForm
                     ->visibility('public')
                     ->imageEditor(),
 
-                TextInput::make('job_title')
-                    ->label('Fonction')
+                /*
+                |--------------------------------------------------------------------------
+                | FONCTION / JOB TITLE — MULTILINGUE
+                |--------------------------------------------------------------------------
+                */
+
+                TextInput::make('job_title_fr')
+                    ->label('Fonction — Français')
+                    ->placeholder('Ex. Docteur / Journaliste / Pharmacologue')
                     ->maxLength(255),
+
+                TextInput::make('job_title_en')
+                    ->label('Job Title — English')
+                    ->placeholder('Ex. Doctor / Journalist / Pharmacologist')
+                    ->maxLength(255),
+
+                TextInput::make('job_title_ht')
+                    ->label('Fonksyon — Kreyòl')
+                    ->placeholder('Eg. Doktè / Jounalis / Farmakològ')
+                    ->maxLength(255),
+
+                TextInput::make('job_title_es')
+                    ->label('Cargo — Español')
+                    ->placeholder('Ej. Doctor / Periodista / Farmacólogo')
+                    ->maxLength(255),
+
+                /*
+                |--------------------------------------------------------------------------
+                | BIOGRAPHIES — MULTILINGUE
+                |--------------------------------------------------------------------------
+                */
 
                 Textarea::make('bio_fr')
                     ->label('Biographie — Français')
@@ -63,6 +91,12 @@ class AuthorForm
                     ->rows(5)
                     ->columnSpanFull(),
 
+                /*
+                |--------------------------------------------------------------------------
+                | SOCIAL NETWORKS
+                |--------------------------------------------------------------------------
+                */
+
                 TextInput::make('facebook')
                     ->label('Facebook')
                     ->url()
@@ -77,6 +111,12 @@ class AuthorForm
                     ->label('LinkedIn')
                     ->url()
                     ->maxLength(255),
+
+                /*
+                |--------------------------------------------------------------------------
+                | STATUS
+                |--------------------------------------------------------------------------
+                */
 
                 Toggle::make('is_active')
                     ->label('Actif')
