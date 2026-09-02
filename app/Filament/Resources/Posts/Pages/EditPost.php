@@ -13,6 +13,8 @@ class EditPost extends EditRecord
 {
     protected static string $resource = PostResource::class;
 
+    protected ?string $oldImage = null;
+
     protected function getHeaderActions(): array
     {
         return [
@@ -20,32 +22,31 @@ class EditPost extends EditRecord
         ];
     }
 
+    protected function beforeSave(): void
+    {
+        $this->oldImage = $this->record->image;
+
+        Log::info('POST EDIT BEFORE SAVE', [
+            'post_id' => $this->record->id,
+            'old_image' => $this->oldImage,
+        ]);
+    }
+
     protected function afterSave(): void
     {
         $post = $this->record;
 
-        Log::info('POST EDIT START', [
-            'id' => $post->id,
-            'image' => $post->image,
+        Log::info('========== POST EDIT START ==========', [
+            'post_id' => $post->id,
+            'old_image' => $this->oldImage,
+            'new_image' => $post->image,
             'image_url' => $post->image_url,
-            'original_image' => $post->getOriginal('image'),
-            'image_changed' => $post->getOriginal('image') !== $post->image,
         ]);
 
-        /*
-        |--------------------------------------------------------------------------
-        | MAIN IMAGE
-        |--------------------------------------------------------------------------
-        */
-
+        // Upload image principale
         $this->uploadMainImage($post);
 
-        /*
-        |--------------------------------------------------------------------------
-        | GALLERY IMAGES
-        |--------------------------------------------------------------------------
-        */
-
+        // Upload images gallery
         $post->load('images');
 
         Log::info('GALLERY IMAGES FOUND', [
@@ -57,64 +58,41 @@ class EditPost extends EditRecord
             $this->uploadGalleryImage($postImage);
         }
 
-        Log::info('POST EDIT FINISHED', [
-            'id' => $post->id,
+        Log::info('========== POST EDIT FINISHED ==========', [
+            'post_id' => $post->id,
         ]);
     }
 
-    /**
-     * Upload main post image to Cloudinary.
-     */
     protected function uploadMainImage($post): void
     {
         $disk = Storage::disk('public');
 
         $imagePath = $post->image;
 
-        /*
-        |--------------------------------------------------------------------------
-        | Verifye si image la chanje
-        |--------------------------------------------------------------------------
-        */
-
-        $originalImage = $post->getOriginal('image');
-
-        $imageChanged = $originalImage !== $imagePath;
-
         Log::info('CHECK MAIN IMAGE', [
             'post_id' => $post->id,
-            'image' => $imagePath,
-            'original_image' => $originalImage,
+            'old_image' => $this->oldImage,
+            'new_image' => $imagePath,
             'image_url' => $post->image_url,
-            'image_changed' => $imageChanged,
             'exists' => $imagePath
                 ? $disk->exists($imagePath)
                 : false,
         ]);
 
-        /*
-        |--------------------------------------------------------------------------
-        | Pa gen nouvo image
-        |--------------------------------------------------------------------------
-        */
-
         if (! $imagePath) {
-            Log::warning('MAIN IMAGE HAS NO FILE PATH', [
+            Log::warning('MAIN IMAGE HAS NO PATH', [
                 'post_id' => $post->id,
             ]);
 
             return;
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Si image lan pa chanje epi image_url deja egziste,
-        | pa bezwen upload li ankò.
-        |--------------------------------------------------------------------------
-        */
-
-        if (! $imageChanged && $post->image_url) {
-            Log::info('MAIN IMAGE NOT CHANGED - ALREADY ON CLOUDINARY', [
+        // Si image la pa chanje epi li deja sou Cloudinary
+        if (
+            $this->oldImage === $imagePath &&
+            $post->image_url
+        ) {
+            Log::info('MAIN IMAGE NOT CHANGED', [
                 'post_id' => $post->id,
                 'image_url' => $post->image_url,
             ]);
@@ -122,16 +100,12 @@ class EditPost extends EditRecord
             return;
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Verifye nouvo fichye a sou disk public
-        |--------------------------------------------------------------------------
-        */
-
+        // Verifye nouvo fichye a
         if (! $disk->exists($imagePath)) {
             Log::error('MAIN IMAGE FILE NOT FOUND', [
                 'post_id' => $post->id,
                 'image' => $imagePath,
+                'storage_path' => $disk->path($imagePath),
             ]);
 
             return;
@@ -143,34 +117,26 @@ class EditPost extends EditRecord
             Log::info('UPLOAD MAIN IMAGE TO CLOUDINARY', [
                 'post_id' => $post->id,
                 'path' => $path,
-                'image_changed' => $imageChanged,
             ]);
 
-            $url = app(CloudinaryService::class)->upload(
+            $cloudinary = app(CloudinaryService::class);
+
+            $url = $cloudinary->upload(
                 $path,
                 'cledinfos/posts'
             );
-
-            /*
-            |--------------------------------------------------------------------------
-            | Mete nouvo URL Cloudinary a
-            |--------------------------------------------------------------------------
-            */
 
             $post->update([
                 'image_url' => $url,
             ]);
 
+            $post->refresh();
+
             Log::info('MAIN IMAGE UPLOADED SUCCESSFULLY', [
                 'post_id' => $post->id,
-                'url' => $url,
+                'image' => $post->image,
+                'image_url' => $post->image_url,
             ]);
-
-            /*
-            |--------------------------------------------------------------------------
-            | Nou pa efase fichye lokal la kounye a.
-            |--------------------------------------------------------------------------
-            */
 
         } catch (\Throwable $e) {
             Log::error('CLOUDINARY MAIN IMAGE ERROR', [
@@ -184,60 +150,36 @@ class EditPost extends EditRecord
         }
     }
 
-    /**
-     * Upload gallery image to Cloudinary.
-     */
     protected function uploadGalleryImage($postImage): void
     {
         $disk = Storage::disk('public');
 
         $imagePath = $postImage->image;
 
-        /*
-        |--------------------------------------------------------------------------
-        | Chèche ansyen image path la
-        |--------------------------------------------------------------------------
-        */
-
-        $originalImage = $postImage->getOriginal('image');
-
-        $imageChanged = $originalImage !== $imagePath;
-
         Log::info('CHECK GALLERY IMAGE', [
             'post_image_id' => $postImage->id,
             'post_id' => $postImage->post_id,
             'image' => $imagePath,
-            'original_image' => $originalImage,
             'image_url' => $postImage->image_url,
-            'image_changed' => $imageChanged,
             'exists' => $imagePath
                 ? $disk->exists($imagePath)
                 : false,
         ]);
 
-        /*
-        |--------------------------------------------------------------------------
-        | Pa gen image
-        |--------------------------------------------------------------------------
-        */
-
         if (! $imagePath) {
-            Log::warning('GALLERY IMAGE HAS NO FILE PATH', [
+            Log::warning('GALLERY IMAGE HAS NO PATH', [
                 'post_image_id' => $postImage->id,
             ]);
 
             return;
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Si image lan pa chanje epi li deja sou Cloudinary,
-        | pa upload ankò.
-        |--------------------------------------------------------------------------
-        */
-
-        if (! $imageChanged && $postImage->image_url) {
-            Log::info('GALLERY IMAGE NOT CHANGED - ALREADY ON CLOUDINARY', [
+        // Si li deja sou Cloudinary epi pa gen nouvo fichye lokal
+        if (
+            ! $disk->exists($imagePath) &&
+            $postImage->image_url
+        ) {
+            Log::info('GALLERY IMAGE ALREADY ON CLOUDINARY', [
                 'post_image_id' => $postImage->id,
                 'image_url' => $postImage->image_url,
             ]);
@@ -245,16 +187,11 @@ class EditPost extends EditRecord
             return;
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Verifye fichye a
-        |--------------------------------------------------------------------------
-        */
-
         if (! $disk->exists($imagePath)) {
             Log::error('GALLERY IMAGE FILE NOT FOUND', [
                 'post_image_id' => $postImage->id,
                 'image' => $imagePath,
+                'storage_path' => $disk->path($imagePath),
             ]);
 
             return;
@@ -266,19 +203,14 @@ class EditPost extends EditRecord
             Log::info('UPLOAD GALLERY IMAGE TO CLOUDINARY', [
                 'post_image_id' => $postImage->id,
                 'path' => $path,
-                'image_changed' => $imageChanged,
             ]);
 
-            $url = app(CloudinaryService::class)->upload(
+            $cloudinary = app(CloudinaryService::class);
+
+            $url = $cloudinary->upload(
                 $path,
                 'cledinfos/posts/gallery'
             );
-
-            /*
-            |--------------------------------------------------------------------------
-            | Mete nouvo URL Cloudinary a
-            |--------------------------------------------------------------------------
-            */
 
             $postImage->update([
                 'image_url' => $url,
@@ -288,11 +220,11 @@ class EditPost extends EditRecord
 
             Log::info('GALLERY IMAGE UPLOADED SUCCESSFULLY', [
                 'post_image_id' => $postImage->id,
-                'url' => $postImage->image_url,
+                'image_url' => $postImage->image_url,
             ]);
 
         } catch (\Throwable $e) {
-            Log::error('CLOUDINARY GALLERY IMAGE ERROR', [
+            Log::error('GALLERY IMAGE CLOUDINARY ERROR', [
                 'post_image_id' => $postImage->id,
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
