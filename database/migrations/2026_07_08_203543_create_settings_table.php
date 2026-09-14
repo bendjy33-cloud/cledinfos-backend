@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('youtube')->nullable();
             $table->string('tiktok')->nullable();
             $table->string('whatsapp')->nullable();
+            $table->string('linkedin')->nullable();
 
             $table->text('about')->nullable();
 

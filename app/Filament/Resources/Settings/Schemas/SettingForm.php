@@ -51,6 +51,9 @@ class SettingForm
                  TextInput::make('whatsapp')
                     ->url(),
 
+                TextInput::make('linkedin')
+                    ->url(),
+
                 Textarea::make('about')
                     ->default(null)
                     ->columnSpanFull(),

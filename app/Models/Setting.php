@@ -30,6 +30,8 @@ class Setting extends Model
 
         'whatsapp',
 
+        'linkedin',
+
         'about',
 
         'breaking_news',
