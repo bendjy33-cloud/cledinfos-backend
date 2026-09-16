@@ -12,12 +12,8 @@ class PostController extends Controller
     public function index(Request $request)
     {
         return PostResource::collection(
-            Post::with([
-                'category',
-                'author',
-            ])
+            Post::with(['category', 'author', 'tags'])
                 ->where('is_published', true)
-                ->whereNotNull('published_at')
                 ->latest('published_at')
                 ->paginate(9)
         );
@@ -33,40 +29,21 @@ class PostController extends Controller
         ])
             ->where('slug', $slug)
             ->where('is_published', true)
-            ->whereNotNull('published_at')
             ->firstOrFail();
 
-        /*
-         * Increment views without refreshing the entire model.
-         * The frontend already has the post data, so there is
-         * no need for an additional SELECT query.
-         */
         $post->increment('views');
-
-        /*
-         * Keep the returned value synchronized with the increment.
-         */
-        $post->views++;
+        $post->refresh();
 
         return new PostResource($post);
     }
 
     public function related(Request $request, string $slug)
     {
-        $post = Post::where('slug', $slug)
-            ->select([
-                'id',
-                'category_id',
-            ])
-            ->firstOrFail();
+        $post = Post::where('slug', $slug)->firstOrFail();
 
         return PostResource::collection(
-            Post::with([
-                'category',
-                'author',
-            ])
+            Post::with(['category', 'author', 'tags'])
                 ->where('is_published', true)
-                ->whereNotNull('published_at')
                 ->where('category_id', $post->category_id)
                 ->where('id', '!=', $post->id)
                 ->latest('published_at')
@@ -78,37 +55,23 @@ class PostController extends Controller
     public function byCategory(Request $request, string $slug)
     {
         return PostResource::collection(
-            Post::with([
-                'category',
-                'author',
-            ])
+            Post::with(['category', 'author', 'tags'])
                 ->whereHas('category', function ($query) use ($slug) {
                     $query->where('slug', $slug);
                 })
                 ->where('is_published', true)
-                ->whereNotNull('published_at')
                 ->latest('published_at')
-                ->paginate(9)
+                ->get()
         );
     }
 
     public function search(Request $request)
     {
-        $query = trim((string) $request->get('q'));
-
-        if ($query === '') {
-            return PostResource::collection(
-                collect()
-            );
-        }
+        $query = $request->get('q');
 
         return PostResource::collection(
-            Post::with([
-                'category',
-                'author',
-            ])
+            Post::with(['category', 'author', 'tags'])
                 ->where('is_published', true)
-                ->whereNotNull('published_at')
                 ->where(function ($builder) use ($query) {
                     $builder
                         ->where('title_fr', 'like', "%{$query}%")
@@ -134,19 +97,15 @@ class PostController extends Controller
                         ->orWhere('meta_description_es', 'like', "%{$query}%");
                 })
                 ->latest('published_at')
-                ->paginate(9)
+                ->get()
         );
     }
 
     public function featured(Request $request)
     {
         return PostResource::collection(
-            Post::with([
-                'category',
-                'author',
-            ])
+            Post::with(['category', 'author', 'tags'])
                 ->where('is_published', true)
-                ->whereNotNull('published_at')
                 ->where('featured', true)
                 ->latest('published_at')
                 ->take(4)
@@ -157,12 +116,8 @@ class PostController extends Controller
     public function mostRead(Request $request)
     {
         return PostResource::collection(
-            Post::with([
-                'category',
-                'author',
-            ])
+            Post::with(['category', 'author', 'tags'])
                 ->where('is_published', true)
-                ->whereNotNull('published_at')
                 ->orderByDesc('views')
                 ->take(5)
                 ->get()
@@ -172,12 +127,8 @@ class PostController extends Controller
     public function trending(Request $request)
     {
         return PostResource::collection(
-            Post::with([
-                'category',
-                'author',
-            ])
+            Post::with(['category', 'author', 'tags'])
                 ->where('is_published', true)
-                ->whereNotNull('published_at')
                 ->orderByDesc('views')
                 ->take(5)
                 ->get()
