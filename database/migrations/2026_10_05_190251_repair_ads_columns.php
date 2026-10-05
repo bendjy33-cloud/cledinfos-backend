@@ -1,62 +1,33 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
+    public $withinTransaction = false;
+
     public function up(): void
     {
-        if (! Schema::hasColumn('ads', 'post_id')) {
-            Schema::table('ads', function (Blueprint $table) {
-                $table->unsignedBigInteger('post_id')
-                    ->nullable()
-                    ->after('position');
-            });
-        }
-
-        if (! Schema::hasColumn('ads', 'title_fr')) {
-            Schema::table('ads', function (Blueprint $table) {
-                $table->string('title_fr')->nullable()->after('title');
-            });
-        }
-
-        if (! Schema::hasColumn('ads', 'title_ht')) {
-            Schema::table('ads', function (Blueprint $table) {
-                $table->string('title_ht')->nullable()->after('title_fr');
-            });
-        }
-
-        if (! Schema::hasColumn('ads', 'title_en')) {
-            Schema::table('ads', function (Blueprint $table) {
-                $table->string('title_en')->nullable()->after('title_ht');
-            });
-        }
-
-        if (! Schema::hasColumn('ads', 'title_es')) {
-            Schema::table('ads', function (Blueprint $table) {
-                $table->string('title_es')->nullable()->after('title_en');
-            });
-        }
+        DB::statement('
+            ALTER TABLE ads
+            ADD COLUMN IF NOT EXISTS post_id BIGINT NULL,
+            ADD COLUMN IF NOT EXISTS title_fr VARCHAR(255) NULL,
+            ADD COLUMN IF NOT EXISTS title_ht VARCHAR(255) NULL,
+            ADD COLUMN IF NOT EXISTS title_en VARCHAR(255) NULL,
+            ADD COLUMN IF NOT EXISTS title_es VARCHAR(255) NULL
+        ');
     }
 
     public function down(): void
     {
-        $columns = [
-            'post_id',
-            'title_fr',
-            'title_ht',
-            'title_en',
-            'title_es',
-        ];
-
-        foreach ($columns as $column) {
-            if (Schema::hasColumn('ads', $column)) {
-                Schema::table('ads', function (Blueprint $table) use ($column) {
-                    $table->dropColumn($column);
-                });
-            }
-        }
+        DB::statement('
+            ALTER TABLE ads
+            DROP COLUMN IF EXISTS post_id,
+            DROP COLUMN IF EXISTS title_fr,
+            DROP COLUMN IF EXISTS title_ht,
+            DROP COLUMN IF EXISTS title_en,
+            DROP COLUMN IF EXISTS title_es
+        ');
     }
 };
