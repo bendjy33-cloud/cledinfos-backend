@@ -9,18 +9,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('ads', function (Blueprint $table) {
-            $table->foreignId('post_id')
+            $table->unsignedBigInteger('post_id')
                 ->nullable()
-                ->after('position')
-                ->constrained('posts')
-                ->nullOnDelete();
+                ->after('position');
         });
     }
 
     public function down(): void
     {
         Schema::table('ads', function (Blueprint $table) {
-            $table->dropForeign(['post_id']);
             $table->dropColumn('post_id');
         });
     }
