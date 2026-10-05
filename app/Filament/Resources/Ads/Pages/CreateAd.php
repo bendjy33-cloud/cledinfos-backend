@@ -12,6 +12,23 @@ class CreateAd extends CreateRecord
 {
     protected static string $resource = AdResource::class;
 
+    /**
+     * Prepare data before creating the Ad record.
+     *
+     * The database still requires the legacy "title" field,
+     * while the form uses localized title fields.
+     */
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        $data['title'] = $data['title_fr']
+            ?? $data['title_ht']
+            ?? $data['title_en']
+            ?? $data['title_es']
+            ?? '';
+
+        return $data;
+    }
+
     protected function afterCreate(): void
     {
         $ad = $this->record;
