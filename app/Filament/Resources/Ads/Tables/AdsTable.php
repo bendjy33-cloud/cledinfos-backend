@@ -23,7 +23,7 @@ class AdsTable
                     ->disk('public')
                     ->square(),
 
-                TextColumn::make('title')
+                TextColumn::make('title_fr')
                     ->label('Titre')
                     ->searchable()
                     ->sortable(),
@@ -32,6 +32,13 @@ class AdsTable
                     ->label('Position')
                     ->badge()
                     ->sortable(),
+
+                TextColumn::make('post.title_fr')
+                    ->label('Article associé')
+                    ->searchable()
+                    ->sortable()
+                    ->limit(50)
+                    ->placeholder('Tous les articles'),
 
                 IconColumn::make('active')
                     ->label('Actif')

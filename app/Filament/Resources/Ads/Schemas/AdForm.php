@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Ads\Schemas;
 
+use App\Models\Post;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -16,10 +17,33 @@ class AdForm
         return $schema
             ->components([
 
-                TextInput::make('title')
-                    ->label('Titre')
+                // =====================================================
+                // TITRES MULTILINGUES
+                // =====================================================
+
+                TextInput::make('title_fr')
+                    ->label('Titre — Français')
                     ->required()
                     ->maxLength(255),
+
+                TextInput::make('title_ht')
+                    ->label('Tit — Kreyòl')
+                    ->nullable()
+                    ->maxLength(255),
+
+                TextInput::make('title_en')
+                    ->label('Title — English')
+                    ->nullable()
+                    ->maxLength(255),
+
+                TextInput::make('title_es')
+                    ->label('Título — Español')
+                    ->nullable()
+                    ->maxLength(255),
+
+                // =====================================================
+                // POSITION
+                // =====================================================
 
                 Select::make('position')
                     ->label('Position')
@@ -31,6 +55,40 @@ class AdForm
                     ])
                     ->required(),
 
+                // =====================================================
+                // ARTICLE ASSOCIÉ
+                // =====================================================
+
+                Select::make('post_id')
+                    ->label('Article associé')
+                    ->options(function () {
+                        return Post::query()
+                            ->orderByDesc('published_at')
+                            ->get()
+                            ->mapWithKeys(function (Post $post) {
+                                $title = $post->title_fr
+                                    ?? $post->title_ht
+                                    ?? $post->title_en
+                                    ?? $post->title_es
+                                    ?? 'Article #' . $post->id;
+
+                                return [
+                                    $post->id => $title,
+                                ];
+                            })
+                            ->toArray();
+                    })
+                    ->searchable()
+                    ->preload()
+                    ->nullable()
+                    ->helperText(
+                        'Sélectionnez l’article auquel cette publicité sera associée.'
+                    ),
+
+                // =====================================================
+                // IMAGE
+                // =====================================================
+
                 FileUpload::make('image')
                     ->label('Image publicitaire')
                     ->image()
@@ -38,6 +96,10 @@ class AdForm
                     ->disk('public')
                     ->nullable()
                     ->maxSize(10240),
+
+                // =====================================================
+                // VIDEO
+                // =====================================================
 
                 FileUpload::make('video')
                     ->label('Vidéo publicitaire')
@@ -52,14 +114,26 @@ class AdForm
                     ->nullable()
                     ->maxSize(102400),
 
+                // =====================================================
+                // LIEN
+                // =====================================================
+
                 TextInput::make('url')
                     ->label('Lien')
                     ->url()
                     ->nullable(),
 
+                // =====================================================
+                // STATUT
+                // =====================================================
+
                 Toggle::make('active')
                     ->label('Actif')
                     ->default(true),
+
+                // =====================================================
+                // DATES
+                // =====================================================
 
                 DateTimePicker::make('starts_at')
                     ->label('Début')

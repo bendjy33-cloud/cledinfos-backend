@@ -26,13 +26,25 @@ class PostController extends Controller
             'author',
             'tags',
             'images',
+            'ads' => function ($query) {
+                $query
+                    ->where('active', true)
+                    ->where(function ($q) {
+                        $q->whereNull('starts_at')
+                            ->orWhere('starts_at', '<=', now());
+                    })
+                    ->where(function ($q) {
+                        $q->whereNull('ends_at')
+                            ->orWhere('ends_at', '>=', now());
+                    })
+                    ->orderBy('position');
+            },
         ])
             ->where('slug', $slug)
             ->where('is_published', true)
             ->firstOrFail();
 
         $post->increment('views');
-        $post->refresh();
 
         return new PostResource($post);
     }

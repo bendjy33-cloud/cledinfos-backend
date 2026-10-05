@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Ad extends Model
 {
@@ -11,7 +12,15 @@ class Ad extends Model
 
     protected $fillable = [
         'title',
+
+        // Localized titles
+        'title_fr',
+        'title_ht',
+        'title_en',
+        'title_es',
+
         'position',
+        'post_id',
         'image',
         'video',
         'url',
@@ -25,4 +34,9 @@ class Ad extends Model
         'starts_at' => 'datetime',
         'ends_at' => 'datetime',
     ];
+
+    public function post(): BelongsTo
+    {
+        return $this->belongsTo(Post::class);
+    }
 }

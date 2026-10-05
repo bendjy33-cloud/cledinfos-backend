@@ -80,6 +80,11 @@ class PostResource extends JsonResource
             'tags' => TagResource::collection(
                 $this->whenLoaded('tags')
             ),
+
+            // Advertisements
+            'ads' => AdResource::collection(
+                $this->whenLoaded('ads')
+            ),
         ];
     }
 }
