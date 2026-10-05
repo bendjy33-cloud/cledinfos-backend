@@ -112,6 +112,10 @@ class AdForm
                     ->directory('ads/videos')
                     ->disk('public')
                     ->nullable()
+                    ->rules([
+                        'file',
+                        'max:102400',
+                    ])
                     ->maxSize(102400),
 
                 // =====================================================
