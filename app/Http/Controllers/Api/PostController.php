@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PostResource;
+use App\Models\Ad;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -26,23 +27,29 @@ class PostController extends Controller
             'author',
             'tags',
             'images',
-            'ads' => function ($query) {
-                $query
-                    ->where('active', true)
-                    ->where(function ($q) {
-                        $q->whereNull('starts_at')
-                            ->orWhere('starts_at', '<=', now());
-                    })
-                    ->where(function ($q) {
-                        $q->whereNull('ends_at')
-                            ->orWhere('ends_at', '>=', now());
-                    })
-                    ->orderBy('position');
-            },
         ])
             ->where('slug', $slug)
             ->where('is_published', true)
             ->firstOrFail();
+
+        $ads = Ad::query()
+            ->where('active', true)
+            ->where(function ($query) use ($post) {
+                $query->where('post_id', $post->id)
+                    ->orWhereNull('post_id');
+            })
+            ->where(function ($query) {
+                $query->whereNull('starts_at')
+                    ->orWhere('starts_at', '<=', now());
+            })
+            ->where(function ($query) {
+                $query->whereNull('ends_at')
+                    ->orWhere('ends_at', '>=', now());
+            })
+            ->orderBy('position')
+            ->get();
+
+        $post->setRelation('ads', $ads);
 
         $post->increment('views');
 
